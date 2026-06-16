@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  * <p>En cas de succès, le service d'authentification retourne un token JWT
  * contenu dans un {@link cm.edu.banking.dto.response.AuthResponse}.</p>
  *
- * @author MEZT-coding
+ * @author Équipe Banking API
  * @since 1.0.0
  */
 @Data

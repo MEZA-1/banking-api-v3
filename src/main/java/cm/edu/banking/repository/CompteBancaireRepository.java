@@ -49,6 +49,19 @@ public interface CompteBancaireRepository extends JpaRepository<CompteBancaire, 
     boolean existsByNumeroCompte(String numeroCompte);
 
     /**
+     * Recherche un compte bancaire par son numéro de compte.
+     *
+     * <p>Utilisé lors des transferts internes et interbancaires pour
+     * localiser le compte destinataire à partir du numéro fourni par
+     * le client émetteur (Skills 11 et 12).</p>
+     *
+     * @param numeroCompte le numéro de compte à rechercher
+     * @return un {@link Optional} contenant le compte trouvé, ou vide
+     *         si aucun compte ne porte ce numéro
+     */
+    Optional<CompteBancaire> findByNumeroCompte(String numeroCompte);
+
+    /**
      * Calcule la somme des soldes de tous les comptes bancaires
      * appartenant aux clients ({@link Role#CLIENT}) et agents
      * ({@link Role#AGENT}) rattachés à une banque donnée.

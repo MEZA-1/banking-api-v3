@@ -1,69 +1,51 @@
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/exception/UtilisateurNonTrouveException.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/service/impl/CompteBancaireServiceImpl.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/controller/AuthController.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/repository/TransactionRepository.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/service/UserService.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/model/enums/TransactionType.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/request/LoginRequest.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/exception/TelephoneDejaUtiliseException.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/request/CreateBanqueRequest.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/response/PageResponse.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/exception/TransactionInvalideException.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/response/ApiResponse.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/response/TransactionResponse.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/exception/SoldeInsuffisantException.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/config/ReferenceGenerator.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/request/RetraitRequest.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/service/TransactionService.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/util/ExportService.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/model/enums/UserStatus.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/controller/ExportController.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/request/CreateUserRequest.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/service/impl/AuthServiceImpl.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/model/enums/TypeCompte.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/request/TransfertRequest.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/request/TransfertInterBancaireRequest.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/model/Transaction.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/config/email/EmailService.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/service/impl/BanqueServiceImpl.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/exception/BanqueIntrouvableException.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/service/impl/UserServiceImpl.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/model/enums/TransactionStatus.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/mapper/CompteBancaireMapper.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/controller/CompteBancaireController.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/config/Emai.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/config/security/UserDetailsServiceImpl.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/exception/EmailDejaUtiliseException.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/model/Banque.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/config/security/JwtUtil.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/service/AuthService.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/model/User.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/config/SwaggerConfig.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/mapper/UserMapper.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/config/IbanGenerator.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/request/UpdateUserRequest.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/exception/GlobalExceptionHandler.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/config/security/SecurityConfig.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/model/enums/UserRole.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/request/DepotRequest.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/BankingApiApplication.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/response/UserResponse.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/service/BanqueService.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/controller/BanqueController.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/response/CompteBancaireResponse.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/mapper/TransactionMapper.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/config/security/JwtAuthFilter.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/service/CompteBancaireService.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/response/BanqueResponse.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/service/impl/TransactionServiceImpl.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/repository/CompteBancaireRepository.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/repository/BanqueRepository.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/controller/TransactionController.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/request/CreateCompteBancaireRequest.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/mapper/BanqueMapper.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/controller/UserController.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/exception/CompteIntrouvableException.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/model/CompteBancaire.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/repository/UserRepository.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/dto/response/JwtResponse.java
-/home/meza/Téléchargements/banking-api/src/main/java/cm/edu/banking/model/enums/StatutCompte.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/CreateBanqueRequest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/model/enums/Role.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/service/SuperviseurService.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/exception/BankingException.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/security/SecurityUtils.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/repository/OperationRepository.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/security/jwt/JwtProperties.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/CreateAgentRequest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/model/Operation.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/controller/AgentController.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/model/enums/StatutCompte.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/security/filter/JwtAuthenticationFilter.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/DepotRequest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/ApprovisionnerAgentRequest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/repository/BanqueRepository.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/RegisterRequest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/security/AuthService.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/TransfertRequest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/CreateCompteBancaireRequest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/exception/ResourceNotFoundException.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/controller/AuthController.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/model/Banque.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/security/CustomUserDetailsService.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/BankingApplication.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/controller/ClientController.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/repository/CompteBancaireRepository.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/repository/UserRepository.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/CreateSuperviseurRequest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/exception/DuplicateResourceException.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/service/TransactionService.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/model/User.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/model/CompteBancaire.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/exception/GlobalExceptionHandler.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/response/BanqueResponse.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/service/BankingMapper.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/response/UserResponse.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/RetraitAdminRequest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/RetraitRequest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/service/AdminService.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/response/OperationResponse.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/security/JwtAuthenticationEntryPoint.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/controller/AdminController.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/security/jwt/JwtTokenProvider.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/LoginRequest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/model/enums/StatutBanque.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/model/enums/TypeOperation.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/config/OpenApiConfig.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/response/AuthResponse.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/config/SecurityConfig.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/response/CompteBancaireResponse.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/controller/SuperviseurController.java

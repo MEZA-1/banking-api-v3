@@ -1,0 +1,39 @@
+# ===== Maven =====
+
+*.class
+
+*.war
+
+# ===== IDE =====
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ===== Environnement =====
+.env
+.env.local
+.env.production
+*.env
+.dockerignore
+*.png
+*.dot
+
+#====document md====
+CLAUDE.md
+REQUIRED.md
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== Spring Boot =====
+spring-shell.log

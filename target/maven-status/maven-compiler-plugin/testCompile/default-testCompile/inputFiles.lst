@@ -1,0 +1,10 @@
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/test/java/cm/edu/banking/controller/ClientControllerTest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/test/java/cm/edu/banking/controller/AgentControllerTest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/test/java/cm/edu/banking/service/BankingCalculationsTest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/test/java/cm/edu/banking/service/TransactionServiceTest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/test/java/cm/edu/banking/controller/AuthControllerTest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/test/java/cm/edu/banking/security/AuthServiceTest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/test/java/cm/edu/banking/service/AdminServiceTest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/test/java/cm/edu/banking/controller/AdminControllerTest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/test/java/cm/edu/banking/service/SuperviseurServiceTest.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/test/java/cm/edu/banking/security/JwtTokenProviderTest.java

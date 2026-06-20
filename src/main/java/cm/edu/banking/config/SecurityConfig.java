@@ -155,6 +155,18 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
 
+                        // --- Ressources statiques Web ---
+                        .requestMatchers(
+                                "/",
+                                "/*.html",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/webjars/**",
+                                "/assets/**",
+                                "/pages/*.html"
+                        ).permitAll()
+
                         // --- Toutes les autres routes : authentification obligatoire ---
                         // Les restrictions par rôle sont gérées via @PreAuthorize
                         // au niveau des contrôleurs .

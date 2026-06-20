@@ -1,0 +1,50 @@
+-------------------------------------------------------------------------------
+Test set: cm.edu.banking.service.TransactionServiceTest$RetraitTests
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 0.111 s <<< FAILURE! -- in cm.edu.banking.service.TransactionServiceTest$RetraitTests
+cm.edu.banking.service.TransactionServiceTest$RetraitTests.retrait_soldeInsuffisant_throwsBankingException -- Time elapsed: 0.014 s <<< ERROR!
+org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at cm.edu.banking.service.TransactionServiceTest$RetraitTests.setupMocks(TransactionServiceTest.java:344)
+  2. -> at cm.edu.banking.service.TransactionServiceTest$RetraitTests.setupMocks(TransactionServiceTest.java:345)
+  3. -> at cm.edu.banking.service.TransactionServiceTest$RetraitTests.setupMocks(TransactionServiceTest.java:346)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:192)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+cm.edu.banking.service.TransactionServiceTest$RetraitTests.retrait_compteClientSuspendu_throwsBankingException -- Time elapsed: 0.013 s <<< ERROR!
+org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at cm.edu.banking.service.TransactionServiceTest$RetraitTests.setupMocks(TransactionServiceTest.java:344)
+  2. -> at cm.edu.banking.service.TransactionServiceTest$RetraitTests.setupMocks(TransactionServiceTest.java:345)
+  3. -> at cm.edu.banking.service.TransactionServiceTest$RetraitTests.setupMocks(TransactionServiceTest.java:346)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:192)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+cm.edu.banking.service.TransactionServiceTest$RetraitTests.retrait_compteAgentSuspendu_throwsBankingException -- Time elapsed: 0.013 s <<< ERROR!
+org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at cm.edu.banking.service.TransactionServiceTest$RetraitTests.setupMocks(TransactionServiceTest.java:342)
+  2. -> at cm.edu.banking.service.TransactionServiceTest$RetraitTests.setupMocks(TransactionServiceTest.java:344)
+  3. -> at cm.edu.banking.service.TransactionServiceTest$RetraitTests.setupMocks(TransactionServiceTest.java:345)
+  4. -> at cm.edu.banking.service.TransactionServiceTest$RetraitTests.setupMocks(TransactionServiceTest.java:346)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:192)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

@@ -69,3 +69,4 @@ cm/edu/banking/dto/request/TransfertRequest$TransfertRequestBuilder.class
 cm/edu/banking/dto/request/DepotRequest.class
 cm/edu/banking/dto/request/RetraitRequest$RetraitRequestBuilder.class
 cm/edu/banking/dto/response/BanqueResponse$BanqueResponseBuilder.class
+cm/edu/banking/controller/UserController.class

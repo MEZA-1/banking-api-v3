@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banking API — Connexion</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <style>
+    .auth-features { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0.75rem; position: relative; z-index: 1; }
+    .auth-feature  { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; color: rgba(255,255,255,0.75); }
+    .auth-feature i { color: var(--cyan); width: 20px; text-align: center; }
+    .role-hint { background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 1.5rem; font-size: 0.8rem; color: var(--muted); }
+    .role-hint strong { color: var(--cyan); display: block; margin-bottom: 0.25rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  </style>
+</head>
+<body>
+<div id="page-loader" class="page-loader">
+  <div class="loader-logo">Banking<span>API</span></div>
+  <div class="spinner"></div>
+</div>
+
+<div class="auth-wrapper">
+  <!-- Brand panel -->
+  <div class="auth-brand">
+    <div class="auth-brand-logo">
+      <i class="fas fa-university"></i>
+      Banking<span>API</span>
+    </div>
+    <p class="auth-brand-tagline">
+      Plateforme bancaire multi-banques CEMAC — Sécurisée, fiable et moderne.
+    </p>
+    <div class="auth-brand-stats">
+      <div class="stat"><div class="stat-val">4</div><div class="stat-lbl">Rôles</div></div>
+      <div class="stat"><div class="stat-val">100%</div><div class="stat-lbl">Sécurisé JWT</div></div>
+      <div class="stat"><div class="stat-val">CEMAC</div><div class="stat-lbl">Zone</div></div>
+    </div>
+    <div class="auth-features">
+      <div class="auth-feature"><i class="fas fa-shield-alt"></i> Authentification sécurisée par JWT</div>
+      <div class="auth-feature"><i class="fas fa-exchange-alt"></i> Transferts internes & interbancaires</div>
+      <div class="auth-feature"><i class="fas fa-chart-line"></i> Suivi en temps réel des opérations</div>
+      <div class="auth-feature"><i class="fas fa-users-cog"></i> Gestion multi-niveaux des utilisateurs</div>
+    </div>
+  </div>
+
+  <!-- Auth panel -->
+  <div class="auth-panel">
+    <div class="auth-card">
+      <h1>Bon retour 👋</h1>
+      <p class="subtitle">Connectez-vous pour accéder à votre espace.</p>
+
+      <div id="login-alert" class="alert alert-danger" style="display:none">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="login-alert-msg"></span>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <div class="input-group">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="login-email" class="form-control"
+                   placeholder="votre@email.com" autocomplete="email" required />
+          </div>
+          <div class="form-error" id="err-email">Email invalide.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="login-password" class="form-control"
+                   placeholder="••••••••" autocomplete="current-password" required />
+            <i class="fas fa-eye input-action" id="toggle-pwd"></i>
+          </div>
+          <div class="form-error" id="err-pwd">Mot de passe requis.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="login-btn" style="margin-top:0.5rem">
+          <i class="fas fa-sign-in-alt"></i>
+          Se connecter
+        </button>
+      </form>
+
+      <div class="divider-text">ou</div>
+
+      <button class="btn btn-secondary btn-full" onclick="window.location.href='pages/register.html'">
+        <i class="fas fa-user-plus"></i>
+        Créer un compte client
+      </button>
+
+      <div class="role-hint">
+        <strong>Comptes de démonstration</strong>
+        Admin : mezatiogeril@gmail.com / Admin123
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script>
+  // Redirect if already logged in
+  if (Auth.isAuthenticated()) Auth.redirectToDashboard();
+
+  // Toggle password visibility
+  document.getElementById('toggle-pwd').addEventListener('click', function() {
+    const inp = document.getElementById('login-password');
+    const isText = inp.type === 'text';
+    inp.type = isText ? 'password' : 'text';
+    this.className = `fas ${isText ? 'fa-eye' : 'fa-eye-slash'} input-action`;
+  });
+
+  // Form submit
+  document.getElementById('login-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const alert = document.getElementById('login-alert');
+    const alertMsg = document.getElementById('login-alert-msg');
+    const btn = document.getElementById('login-btn');
+
+    // Validation
+    let valid = true;
+    document.querySelectorAll('.form-error').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
+
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      document.getElementById('err-email').classList.add('show');
+      document.getElementById('login-email').classList.add('is-invalid');
+      valid = false;
+    }
+    if (!password) {
+      document.getElementById('err-pwd').classList.add('show');
+      document.getElementById('login-password').classList.add('is-invalid');
+      valid = false;
+    }
+    if (!valid) return;
+
+    // Submit
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner spinner-sm"></span> Connexion…';
+    alert.style.display = 'none';
+
+    try {
+      const data = await API.login(email, password);
+      Auth.setSession(data.accessToken, {
+        userId: data.userId,
+        nomComplet: data.nomComplet,
+        email: data.email,
+        role: data.role,
+      });
+      Toast.success(`Bienvenue, ${data.nomComplet} !`);
+      setTimeout(() => Auth.redirectToDashboard(), 600);
+    } catch (err) {
+      alert.style.display = 'flex';
+      alertMsg.textContent = getErrorMessage(err);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+    }
+  });
+
+  // Enter key
+  document.getElementById('login-email').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('login-password').focus();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banking API — Administration</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../css/main.css"/>
+</head>
+<body>
+<div id="page-loader" class="page-loader"><div class="loader-logo">Banking<span>API</span></div><div class="spinner"></div></div>
+<div id="toast-container" class="toast-container"></div>
+<div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+<!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+<div class="app-layout">
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="fas fa-university"></i></div>
+    <div class="logo-text">BankingAPI<small>Administration</small></div>
+  </div>
+  <div class="sidebar-user">
+    <div class="avatar" id="sb-avatar">SA</div>
+    <div class="user-info">
+      <div class="name" id="sb-user-name">Super Admin</div>
+      <span class="role-badge admin" id="sb-user-role">ADMIN</span>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-section-label">Navigation</div>
+    <div class="nav-item active" id="nav-dashboard" onclick="showSection('dashboard')">
+      <i class="fas fa-tachometer-alt"></i> Tableau de bord
+    </div>
+    <div class="nav-item" id="nav-banques" onclick="showSection('banques')">
+      <i class="fas fa-landmark"></i> Banques
+    </div>
+    <div class="nav-item" id="nav-superviseurs" onclick="showSection('superviseurs')">
+      <i class="fas fa-user-tie"></i> Superviseurs
+    </div>
+    <div class="nav-item" id="nav-utilisateurs" onclick="showSection('utilisateurs')">
+      <i class="fas fa-users"></i> Utilisateurs
+    </div>
+    <div class="nav-item" id="nav-historique" onclick="showSection('historique')">
+      <i class="fas fa-history"></i> Historique
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="btn-logout" onclick="Auth.logout()">
+      <i class="fas fa-sign-out-alt"></i> Déconnexion
+    </button>
+  </div>
+</aside>
+
+<!-- ═══════════════════════ MAIN ═══════════════════════ -->
+<div class="main-content">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="sidebar-toggle" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+      <h2 id="page-title">Tableau de bord</h2>
+    </div>
+    <div class="topbar-right">
+      <div class="btn-icon" title="Actualiser" onclick="loadCurrentSection()"><i class="fas fa-sync-alt"></i></div>
+      <div class="btn-icon" onclick="Auth.logout()" title="Déconnexion"><i class="fas fa-sign-out-alt"></i></div>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <!-- ── DASHBOARD ── -->
+    <section id="sec-dashboard">
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-landmark"></i></div><div><div class="stat-label">Banques</div><div class="stat-value" id="st-banques">—</div></div></div>
+        <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-user-tie"></i></div><div><div class="stat-label">Superviseurs</div><div class="stat-value" id="st-sup">—</div></div></div>
+        <div class="stat-card"><div class="stat-icon green"><i class="fas fa-user-cog"></i></div><div><div class="stat-label">Agents</div><div class="stat-value" id="st-agents">—</div></div></div>
+        <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-users"></i></div><div><div class="stat-label">Clients</div><div class="stat-value" id="st-clients">—</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-coins"></i></div><div><div class="stat-label">Montant total actif</div><div class="stat-value" id="st-total" style="font-size:1rem">—</div></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title"><i class="fas fa-landmark"></i> Aperçu des banques</span>
+          <button class="btn btn-primary btn-sm" onclick="openModalBanque()"><i class="fas fa-plus"></i> Nouvelle banque</button>
+        </div>
+        <div class="table-wrap">
+          <table id="tbl-banques-dash">
+            <thead><tr><th>Nom</th><th>Statut</th><th>Montant Actif</th><th>Montant Ligne</th><th>Actions</th></tr></thead>
+            <tbody id="tbody-banques-dash"><tr class="empty-row"><td colspan="5"><i class="fas fa-spinner fa-spin"></i><br>Chargement…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── BANQUES ── -->
+    <section id="sec-banques" style="display:none">
+      <div class="section-header">
+        <h3 class="section-title">Gestion des banques</h3>
+        <div class="section-actions">
+          <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="search-banques" placeholder="Rechercher une banque…" oninput="filterBanques()"/></div>
+          <button class="btn btn-primary" onclick="openModalBanque()"><i class="fas fa-plus"></i> Nouvelle banque</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Nom</th><th>Statut</th><th>Montant Initial</th><th>Montant Actif</th><th>Montant Ligne</th><th>Créée le</th><th>Actions</th></tr></thead>
+            <tbody id="tbody-banques"></tbody>
+          </table>
+        </div>
+        <div class="card-footer"><div class="pagination" id="pg-banques"></div></div>
+      </div>
+    </section>
+
+    <!-- ── SUPERVISEURS ── -->
+    <section id="sec-superviseurs" style="display:none">
+      <div class="section-header">
+        <h3 class="section-title">Superviseurs</h3>
+        <div class="section-actions">
+          <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="search-sup" placeholder="Rechercher…" oninput="filterSup()"/></div>
+          <button class="btn btn-primary" onclick="openModalSuperviseur()"><i class="fas fa-plus"></i> Nouveau superviseur</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nom complet</th><th>Email</th><th>Téléphone</th><th>Banque</th><th>Créé le</th></tr></thead>
+            <tbody id="tbody-sup"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── UTILISATEURS ── -->
+    <section id="sec-utilisateurs" style="display:none">
+      <div class="section-header">
+        <h3 class="section-title">Tous les utilisateurs</h3>
+        <div class="section-actions">
+          <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="search-users" placeholder="Rechercher…" oninput="filterUsers()"/></div>
+          <select id="filter-role" class="form-control" style="width:160px" onchange="filterUsers()">
+            <option value="">Tous les rôles</option>
+            <option value="ADMIN">Admin</option>
+            <option value="SUPERVISEUR">Superviseur</option>
+            <option value="AGENT">Agent</option>
+            <option value="CLIENT">Client</option>
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nom complet</th><th>Email</th><th>Téléphone</th><th>Rôle</th><th>Banque</th><th>Créé le</th></tr></thead>
+            <tbody id="tbody-users"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── HISTORIQUE ── -->
+    <section id="sec-historique" style="display:none">
+      <div class="section-header">
+        <h3 class="section-title">Historique des opérations</h3>
+        <div class="section-actions">
+          <select id="sel-banque-hist" class="form-control" style="width:220px" onchange="loadHistorique(0)">
+            <option value="">— Choisir une banque —</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="Export.printTable('tbl-hist','Historique')"><i class="fas fa-print"></i> Imprimer</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportHistCSV()"><i class="fas fa-file-csv"></i> CSV</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table id="tbl-hist">
+            <thead><tr><th>Date</th><th>Type</th><th>Montant</th><th>Frais</th><th>Émetteur</th><th>Destinataire</th><th>Banque</th></tr></thead>
+            <tbody id="tbody-hist"></tbody>
+          </table>
+        </div>
+        <div class="card-footer"><div class="pagination" id="pg-hist"></div></div>
+      </div>
+    </section>
+
+  </div><!-- /page-body -->
+</div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<!-- ═══ MODAL : Nouvelle banque ═══ -->
+<div class="modal-overlay" id="modal-banque">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title"><i class="fas fa-landmark"></i> Créer une banque</span>
+      <button class="modal-close" onclick="Modal.close('modal-banque')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="alert-banque" class="alert alert-danger" style="display:none"><i class="fas fa-exclamation-circle"></i><span id="alert-banque-msg"></span></div>
+      <div class="form-group"><label class="form-label">Nom de la banque *</label><input type="text" id="b-nom" class="form-control" placeholder="Ex: Banque Camerounaise"/></div>
+      <div class="form-group"><label class="form-label">Montant initial (FCFA) *</label>
+        <div class="input-group"><i class="fas fa-coins input-icon"></i><input type="number" id="b-montant" class="form-control" placeholder="Min. 2 000 000" min="2000000" step="100000"/></div>
+        <div class="form-hint">Minimum requis : 2 000 000 FCFA</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="Modal.close('modal-banque')">Annuler</button>
+      <button class="btn btn-primary" id="btn-create-banque" onclick="createBanque()"><i class="fas fa-save"></i> Créer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL : Retrait admin ═══ -->
+<div class="modal-overlay" id="modal-retrait">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title"><i class="fas fa-money-bill-wave"></i> Retrait administrateur</span>
+      <button class="modal-close" onclick="Modal.close('modal-retrait')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="alert-retrait" class="alert alert-danger" style="display:none"><i class="fas fa-exclamation-circle"></i><span id="alert-retrait-msg"></span></div>
+      <div class="alert alert-info"><i class="fas fa-info-circle"></i> Plafond : 1 000 000 FCFA par opération.</div>
+      <input type="hidden" id="retrait-banque-id"/>
+      <div class="form-group"><label class="form-label">Montant (FCFA) *</label>
+        <div class="input-group"><i class="fas fa-coins input-icon"></i>
+          <input type="number" id="retrait-montant" class="form-control" placeholder="Max 1 000 000" min="1" max="1000000"/>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Motif (optionnel)</label><input type="text" id="retrait-desc" class="form-control" placeholder="Motif du retrait"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="Modal.close('modal-retrait')">Annuler</button>
+      <button class="btn btn-danger" id="btn-retrait" onclick="doRetraitAdmin()"><i class="fas fa-arrow-down"></i> Effectuer le retrait</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL : Superviseur ═══ -->
+<div class="modal-overlay" id="modal-sup">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title"><i class="fas fa-user-tie"></i> Créer un superviseur</span>
+      <button class="modal-close" onclick="Modal.close('modal-sup')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="alert-sup" class="alert alert-danger" style="display:none"><i class="fas fa-exclamation-circle"></i><span id="alert-sup-msg"></span></div>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Nom *</label><input type="text" id="sup-nom" class="form-control" placeholder="Nom"/></div>
+        <div class="form-group"><label class="form-label">Prénom *</label><input type="text" id="sup-prenom" class="form-control" placeholder="Prénom"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Email *</label><input type="email" id="sup-email" class="form-control" placeholder="email@banque.cm"/></div>
+      <div class="form-group"><label class="form-label">Téléphone *</label><input type="tel" id="sup-tel" class="form-control" placeholder="6XXXXXXXX"/></div>
+      <div class="form-group"><label class="form-label">Mot de passe *</label><input type="password" id="sup-pwd" class="form-control" placeholder="Min. 6 caractères"/></div>
+      <div class="form-group"><label class="form-label">Banque *</label>
+        <select id="sup-banque" class="form-control"><option value="">— Sélectionner une banque —</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="Modal.close('modal-sup')">Annuler</button>
+      <button class="btn btn-primary" id="btn-create-sup" onclick="createSuperviseur()"><i class="fas fa-save"></i> Créer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL : Confirmation suspension ═══ -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <span class="modal-title"><i class="fas fa-exclamation-triangle"></i> Confirmer l'action</span>
+      <button class="modal-close" onclick="Modal.close('modal-confirm')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <p id="confirm-msg" style="color:rgba(255,255,255,.8);line-height:1.6"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="Modal.close('modal-confirm')">Annuler</button>
+      <button class="btn btn-danger" id="btn-confirm-action">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+  if (!Auth.requireRole('ADMIN')) void 0;
+
+  let allBanques = [], allUsers = [], allSups = [];
+  let currentSection = 'dashboard';
+
+  // ── Section navigation ──────────────────────────────────────
+  function showSection(name) {
+    document.querySelectorAll('[id^="sec-"]').forEach(s => s.style.display = 'none');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(`sec-${name}`).style.display = '';
+    document.getElementById(`nav-${name}`).classList.add('active');
+    const titles = { dashboard:'Tableau de bord', banques:'Banques', superviseurs:'Superviseurs', utilisateurs:'Utilisateurs', historique:'Historique' };
+    document.getElementById('page-title').textContent = titles[name] || name;
+    currentSection = name;
+    loadCurrentSection();
+    document.querySelector('.sidebar')?.classList.remove('open');
+  }
+
+  function loadCurrentSection() {
+    if (currentSection === 'dashboard')    { loadStats(); loadBanquesDash(); }
+    if (currentSection === 'banques')      loadBanques();
+    if (currentSection === 'superviseurs') loadSuperviseurs();
+    if (currentSection === 'utilisateurs') loadUsers();
+    if (currentSection === 'historique')   populateBanqueSelect();
+  }
+
+  // ── Stats ───────────────────────────────────────────────────
+  async function loadStats() {
+    try {
+      const [banques, users] = await Promise.all([API.getBanques(), API.getAllUsers()]);
+      allBanques = banques; allUsers = users;
+      document.getElementById('st-banques').textContent = banques.length;
+      document.getElementById('st-sup').textContent   = users.filter(u => u.role === 'SUPERVISEUR').length;
+      document.getElementById('st-agents').textContent = users.filter(u => u.role === 'AGENT').length;
+      document.getElementById('st-clients').textContent = users.filter(u => u.role === 'CLIENT').length;
+      const total = banques.reduce((acc, b) => acc + (b.montantActif || 0), 0);
+      document.getElementById('st-total').textContent = Fmt.money(total);
+    } catch(err) { Toast.error(getErrorMessage(err)); }
+  }
+
+  // ── Banques (dashboard) ─────────────────────────────────────
+  async function loadBanquesDash() {
+    try {
+      const data = await API.getBanques();
+      allBanques = data;
+      const tbody = document.getElementById('tbody-banques-dash');
+      if (!data.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="5"><i class="fas fa-database"></i><br>Aucune banque</td></tr>'; return; }
+      tbody.innerHTML = data.map(b => `
+        <tr>
+          <td><strong>${b.nom}</strong></td>
+          <td>${Fmt.statutBanque(b.statut)}</td>
+          <td class="td-mono">${Fmt.money(b.montantActif)}</td>
+          <td class="td-mono">${Fmt.money(b.montantLigne)}</td>
+          <td>
+            ${b.statut === 'ACTIVE'
+              ? `<button class="btn btn-warning btn-sm" onclick="confirmAction('Suspendre la banque <strong>${b.nom}</strong> ?', () => toggleBanque(${b.id}, 'suspendre'))"><i class="fas fa-pause"></i></button>`
+              : `<button class="btn btn-success btn-sm" onclick="confirmAction('Réactiver la banque <strong>${b.nom}</strong> ?', () => toggleBanque(${b.id}, 'reactiver'))"><i class="fas fa-play"></i></button>`}
+            <button class="btn btn-secondary btn-sm" onclick="openRetraitModal(${b.id})"><i class="fas fa-money-bill-wave"></i></button>
+          </td>
+        </tr>`).join('');
+    } catch(err) { Toast.error(getErrorMessage(err)); }
+  }
+
+  // ── Banques (full) ──────────────────────────────────────────
+  async function loadBanques() {
+    try {
+      const data = await API.getBanques();
+      allBanques = data;
+      renderBanques(data);
+      populateBanqueSelects(data);
+    } catch(err) { Toast.error(getErrorMessage(err)); }
+  }
+
+  function renderBanques(data) {
+    const tbody = document.getElementById('tbody-banques');
+    if (!data.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="8"><i class="fas fa-database"></i><br>Aucune banque enregistrée</td></tr>'; return; }
+    tbody.innerHTML = data.map(b => `
+      <tr>
+        <td><span class="badge badge-muted">#${b.id}</span></td>
+        <td><strong>${b.nom}</strong></td>
+        <td>${Fmt.statutBanque(b.statut)}</td>
+        <td class="td-mono">${Fmt.money(b.montantInitial)}</td>
+        <td class="td-mono">${Fmt.money(b.montantActif)}</td>
+        <td class="td-mono">${Fmt.money(b.montantLigne)}</td>
+        <td class="text-muted text-sm">${Fmt.dateShort(b.dateCreation)}</td>
+        <td style="display:flex;gap:4px">
+          ${b.statut === 'ACTIVE'
+            ? `<button class="btn btn-warning btn-sm" title="Suspendre" onclick="confirmAction('Suspendre <strong>${b.nom}</strong> ?', () => toggleBanque(${b.id}, 'suspendre'))"><i class="fas fa-pause"></i></button>`
+            : `<button class="btn btn-success btn-sm" title="Réactiver" onclick="confirmAction('Réactiver <strong>${b.nom}</strong> ?', () => toggleBanque(${b.id}, 'reactiver'))"><i class="fas fa-play"></i></button>`}
+          <button class="btn btn-secondary btn-sm" title="Retrait admin" onclick="openRetraitModal(${b.id})"><i class="fas fa-arrow-down"></i></button>
+        </td>
+      </tr>`).join('');
+  }
+
+  function filterBanques() {
+    const q = document.getElementById('search-banques').value.toLowerCase();
+    renderBanques(allBanques.filter(b => b.nom.toLowerCase().includes(q)));
+  }
+
+  async function toggleBanque(id, action) {
+    Modal.close('modal-confirm');
+    try {
+      await (action === 'suspendre' ? API.suspendBanque(id) : API.reactivateBanque(id));
+      Toast.success(`Banque ${action === 'suspendre' ? 'suspendue' : 'réactivée'} avec succès.`);
+      loadCurrentSection();
+    } catch(err) { Toast.error(getErrorMessage(err)); }
+  }
+
+  // ── Create banque ───────────────────────────────────────────
+  function openModalBanque() { Modal.open('modal-banque'); }
+
+  async function createBanque() {
+    const nom = document.getElementById('b-nom').value.trim();
+    const montant = parseFloat(document.getElementById('b-montant').value);
+    const alert = document.getElementById('alert-banque');
+    const alertMsg = document.getElementById('alert-banque-msg');
+    alert.style.display = 'none';
+    if (!nom) { alert.style.display='flex'; alertMsg.textContent='Le nom est obligatoire.'; return; }
+    if (!montant || montant < 2000000) { alert.style.display='flex'; alertMsg.textContent='Montant minimum : 2 000 000 FCFA.'; return; }
+    const btn = document.getElementById('btn-create-banque');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner spinner-sm"></span>';
+    try {
+      await API.createBanque({ nom, montantInitial: montant });
+      Toast.success('Banque créée avec succès !');
+      Modal.close('modal-banque');
+      document.getElementById('b-nom').value = '';
+      document.getElementById('b-montant').value = '';
+      loadBanquesDash(); loadBanques();
+    } catch(err) { alert.style.display='flex'; alertMsg.textContent = getErrorMessage(err); }
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Créer';
+  }
+
+  // ── Retrait admin ───────────────────────────────────────────
+  function openRetraitModal(banqueId) {
+    document.getElementById('retrait-banque-id').value = banqueId;
+    document.getElementById('retrait-montant').value = '';
+    document.getElementById('retrait-desc').value = '';
+    document.getElementById('alert-retrait').style.display = 'none';
+    Modal.open('modal-retrait');
+  }
+
+  async function doRetraitAdmin() {
+    const id = document.getElementById('retrait-banque-id').value;
+    const montant = parseFloat(document.getElementById('retrait-montant').value);
+    const desc = document.getElementById('retrait-desc').value;
+    const alert = document.getElementById('alert-retrait');
+    const alertMsg = document.getElementById('alert-retrait-msg');
+    alert.style.display = 'none';
+    if (!montant || montant <= 0 || montant > 1000000) {
+      alert.style.display='flex'; alertMsg.textContent='Montant entre 1 et 1 000 000 FCFA.'; return;
+    }
+    const btn = document.getElementById('btn-retrait');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner spinner-sm"></span>';
+    try {
+      await API.retraitAdmin(id, { montant, description: desc });
+      Toast.success(`Retrait de ${Fmt.money(montant)} effectué.`);
+      Modal.close('modal-retrait');
+      loadCurrentSection();
+    } catch(err) { alert.style.display='flex'; alertMsg.textContent = getErrorMessage(err); }
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-arrow-down"></i> Effectuer le retrait';
+  }
+
+  // ── Superviseurs ─────────────────────────────────────────────
+  async function loadSuperviseurs() {
+    try {
+      const users = await API.getAllUsers();
+      allSups = users.filter(u => u.role === 'SUPERVISEUR');
+      renderSups(allSups);
+    } catch(err) { Toast.error(getErrorMessage(err)); }
+  }
+
+  function renderSups(data) {
+    const tbody = document.getElementById('tbody-sup');
+    if (!data.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="5"><i class="fas fa-user-tie"></i><br>Aucun superviseur</td></tr>'; return; }
+    tbody.innerHTML = data.map(u => `
+      <tr>
+        <td><strong>${u.prenom} ${u.nom}</strong></td>
+        <td>${u.email}</td>
+        <td>${u.telephone || '—'}</td>
+        <td>${u.nomBanque || '—'}</td>
+        <td class="text-muted text-sm">${Fmt.dateShort(u.dateCreation)}</td>
+      </tr>`).join('');
+  }
+
+  function filterSup() {
+    const q = document.getElementById('search-sup').value.toLowerCase();
+    renderSups(allSups.filter(u => `${u.prenom} ${u.nom} ${u.email}`.toLowerCase().includes(q)));
+  }
+
+  function openModalSuperviseur() {
+    populateBanqueSelects(allBanques);
+    document.getElementById('alert-sup').style.display = 'none';
+    Modal.open('modal-sup');
+  }
+
+  async function createSuperviseur() {
+    const data = {
+      nom: document.getElementById('sup-nom').value.trim(),
+      prenom: document.getElementById('sup-prenom').value.trim(),
+      email: document.getElementById('sup-email').value.trim(),
+      telephone: document.getElementById('sup-tel').value.trim(),
+      motDePasse: document.getElementById('sup-pwd').value,
+      banqueId: parseInt(document.getElementById('sup-banque').value),
+    };
+    const alert = document.getElementById('alert-sup');
+    const alertMsg = document.getElementById('alert-sup-msg');
+    alert.style.display = 'none';
+    if (!data.nom || !data.prenom || !data.email || !data.telephone || !data.motDePasse || !data.banqueId) {
+      alert.style.display='flex'; alertMsg.textContent='Tous les champs obligatoires (*) doivent être remplis.'; return;
+    }
+    const btn = document.getElementById('btn-create-sup');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner spinner-sm"></span>';
+    try {
+      await API.createSuperviseur(data);
+      Toast.success('Superviseur créé avec succès !');
+      Modal.close('modal-sup');
+      loadSuperviseurs();
+    } catch(err) { alert.style.display='flex'; alertMsg.textContent = getErrorMessage(err); }
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Créer';
+  }
+
+  // ── Utilisateurs ─────────────────────────────────────────────
+  async function loadUsers() {
+    try {
+      const data = await API.getAllUsers();
+      allUsers = data;
+      renderUsers(data);
+    } catch(err) { Toast.error(getErrorMessage(err)); }
+  }
+
+  function renderUsers(data) {
+    const tbody = document.getElementById('tbody-users');
+    if (!data.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="6"><i class="fas fa-users"></i><br>Aucun utilisateur</td></tr>'; return; }
+    tbody.innerHTML = data.map(u => `
+      <tr>
+        <td><strong>${u.prenom || ''} ${u.nom || ''}</strong></td>
+        <td>${u.email}</td>
+        <td>${u.telephone || '—'}</td>
+        <td><span class="role-badge ${Fmt.roleBadge(u.role)}">${u.role}</span></td>
+        <td>${u.nomBanque || '—'}</td>
+        <td class="text-muted text-sm">${Fmt.dateShort(u.dateCreation)}</td>
+      </tr>`).join('');
+  }
+
+  function filterUsers() {
+    const q = document.getElementById('search-users').value.toLowerCase();
+    const role = document.getElementById('filter-role').value;
+    renderUsers(allUsers.filter(u =>
+      `${u.prenom} ${u.nom} ${u.email}`.toLowerCase().includes(q) &&
+      (role ? u.role === role : true)
+    ));
+  }
+
+  // ── Historique ───────────────────────────────────────────────
+  function populateBanqueSelect() {
+    const sel = document.getElementById('sel-banque-hist');
+    if (allBanques.length === 0) API.getBanques().then(data => { allBanques = data; populateBanqueSelect(); });
+    sel.innerHTML = '<option value="">— Choisir une banque —</option>' +
+      allBanques.map(b => `<option value="${b.id}">${b.nom}</option>`).join('');
+  }
+
+  async function loadHistorique(page = 0) {
+    const id = document.getElementById('sel-banque-hist').value;
+    if (!id) return;
+    try {
+      const data = await API.getHistoriqueBanque(id, page);
+      renderHistorique(data, page);
+    } catch(err) { Toast.error(getErrorMessage(err)); }
+  }
+
+  function renderHistorique(data, page) {
+    const tbody = document.getElementById('tbody-hist');
+    const rows = data.content || [];
+    if (!rows.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="7"><i class="fas fa-history"></i><br>Aucune opération</td></tr>'; return; }
+    tbody.innerHTML = rows.map(op => `
+      <tr>
+        <td class="text-sm">${Fmt.date(op.dateOperation)}</td>
+        <td><span class="${Fmt.typeBadge(op.type)}">${Fmt.typeLabel(op.type)}</span></td>
+        <td class="td-mono">${Fmt.money(op.montant)}</td>
+        <td class="td-mono" style="color:var(--danger)">${Fmt.money(op.frais)}</td>
+        <td class="text-sm">${op.nomEmetteur || '—'}</td>
+        <td class="text-sm">${op.nomDestinataire || '—'}</td>
+        <td>${op.nomBanque || '—'}</td>
+      </tr>`).join('');
+    renderPagination('pg-hist', data, p => loadHistorique(p));
+  }
+
+  // ── Pagination ───────────────────────────────────────────────
+  function renderPagination(containerId, data, callback) {
+    const el = document.getElementById(containerId);
+    if (!el || !data.totalPages) { if(el) el.innerHTML=''; return; }
+    const { number: cur, totalPages } = data;
+    let html = `<button class="page-btn" ${cur === 0 ? 'disabled' : ''} onclick="(${callback})(${cur-1})"><i class="fas fa-chevron-left"></i></button>`;
+    for (let i = Math.max(0, cur-2); i <= Math.min(totalPages-1, cur+2); i++) {
+      html += `<button class="page-btn ${i===cur?'active':''}" onclick="(${callback})(${i})">${i+1}</button>`;
+    }
+    html += `<button class="page-btn" ${cur >= totalPages-1 ? 'disabled' : ''} onclick="(${callback})(${cur+1})"><i class="fas fa-chevron-right"></i></button>`;
+    el.innerHTML = html;
+  }
+
+  // ── Helpers ──────────────────────────────────────────────────
+  function populateBanqueSelects(banques) {
+    const sel = document.getElementById('sup-banque');
+    if (sel) sel.innerHTML = '<option value="">— Banque —</option>' +
+      banques.map(b => `<option value="${b.id}">${b.nom}</option>`).join('');
+  }
+
+  function confirmAction(msg, callback) {
+    document.getElementById('confirm-msg').innerHTML = msg;
+    const btn = document.getElementById('btn-confirm-action');
+    btn.onclick = callback;
+    Modal.open('modal-confirm');
+  }
+
+  function exportHistCSV() {
+    const rows = [];
+    document.querySelectorAll('#tbl-hist tbody tr:not(.empty-row)').forEach(tr => {
+      rows.push(Array.from(tr.cells).map(td => td.textContent.trim()));
+    });
+    Export.toCSV(rows, ['Date','Type','Montant','Frais','Émetteur','Destinataire','Banque'], 'historique-operations');
+  }
+
+  // ── Init ──────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    loadStats();
+    loadBanquesDash();
+  });
+</script>
+</body>
+</html>

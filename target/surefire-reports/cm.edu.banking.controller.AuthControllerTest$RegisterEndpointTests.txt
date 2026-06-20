@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cm.edu.banking.controller.AuthControllerTest$RegisterEndpointTests
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.415 s -- in cm.edu.banking.controller.AuthControllerTest$RegisterEndpointTests

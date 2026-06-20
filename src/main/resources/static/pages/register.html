@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banking API — Inscription</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    .auth-card { max-width: 480px; }
+    .password-strength { height: 4px; border-radius: 99px; background: rgba(255,255,255,0.1); margin-top: 6px; overflow: hidden; }
+    .password-strength-bar { height: 100%; border-radius: 99px; transition: width 0.3s, background 0.3s; width: 0; }
+    .strength-weak   { background: var(--danger);  width: 33%; }
+    .strength-medium { background: var(--warning); width: 66%; }
+    .strength-strong { background: var(--success); width: 100%; }
+  </style>
+</head>
+<body>
+<div id="page-loader" class="page-loader">
+  <div class="loader-logo">Banking<span>API</span></div>
+  <div class="spinner"></div>
+</div>
+
+<div class="auth-wrapper">
+  <div class="auth-brand">
+    <div class="auth-brand-logo"><i class="fas fa-university"></i>Banking<span>API</span></div>
+    <p class="auth-brand-tagline">Rejoignez la plateforme bancaire CEMAC. Créez votre compte et gérez vos finances en toute sécurité.</p>
+    <div class="auth-features" style="margin-top:2.5rem;display:flex;flex-direction:column;gap:.75rem;position:relative;z-index:1">
+      <div style="display:flex;align-items:center;gap:.75rem;font-size:.875rem;color:rgba(255,255,255,.75)">
+        <i class="fas fa-check-circle" style="color:var(--cyan);width:20px;text-align:center"></i> Compte gratuit en quelques secondes
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem;font-size:.875rem;color:rgba(255,255,255,.75)">
+        <i class="fas fa-check-circle" style="color:var(--cyan);width:20px;text-align:center"></i> Transferts vers n'importe quelle banque
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem;font-size:.875rem;color:rgba(255,255,255,.75)">
+        <i class="fas fa-check-circle" style="color:var(--cyan);width:20px;text-align:center"></i> Historique complet de vos opérations
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-panel">
+    <div class="auth-card">
+      <h1>Créer un compte</h1>
+      <p class="subtitle">Remplissez le formulaire pour rejoindre la plateforme.</p>
+
+      <div id="reg-alert" class="alert alert-danger" style="display:none">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="reg-alert-msg"></span>
+      </div>
+
+      <form id="register-form" novalidate>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Nom</label>
+            <input type="text" id="reg-nom" class="form-control" placeholder="Kamga" required />
+            <div class="form-error" id="err-nom">Nom requis.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Prénom</label>
+            <input type="text" id="reg-prenom" class="form-control" placeholder="Rose" required />
+            <div class="form-error" id="err-prenom">Prénom requis.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <div class="input-group">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="reg-email" class="form-control" placeholder="votre@email.com" required />
+          </div>
+          <div class="form-error" id="err-reg-email">Email invalide.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Téléphone</label>
+          <div class="input-group">
+            <i class="fas fa-phone input-icon"></i>
+            <input type="tel" id="reg-tel" class="form-control" placeholder="6XXXXXXXX" required />
+          </div>
+          <div class="form-error" id="err-tel">Téléphone requis.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="reg-pwd" class="form-control" placeholder="Min. 6 caractères" required id="reg-pwd" />
+            <i class="fas fa-eye input-action" id="toggle-pwd1"></i>
+          </div>
+          <div class="password-strength"><div class="password-strength-bar" id="pwd-bar"></div></div>
+          <div class="form-error" id="err-reg-pwd">Mot de passe trop court (min 6 car.).</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirmer le mot de passe</label>
+          <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="reg-pwd2" class="form-control" placeholder="Répétez le mot de passe" required />
+            <i class="fas fa-eye input-action" id="toggle-pwd2"></i>
+          </div>
+          <div class="form-error" id="err-pwd2">Les mots de passe ne correspondent pas.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="reg-btn">
+          <i class="fas fa-user-plus"></i> Créer mon compte
+        </button>
+      </form>
+
+      <div class="divider-text">déjà inscrit ?</div>
+      <button class="btn btn-secondary btn-full" onclick="window.location.href='../index.html'">
+        <i class="fas fa-sign-in-alt"></i> Se connecter
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="../js/api.js"></script>
+<script>
+  if (Auth.isAuthenticated()) Auth.redirectToDashboard();
+
+  // Toggle passwords
+  ['1','2'].forEach(n => {
+    document.getElementById(`toggle-pwd${n}`).addEventListener('click', function() {
+      const inp = document.getElementById(n === '1' ? 'reg-pwd' : 'reg-pwd2');
+      const isText = inp.type === 'text';
+      inp.type = isText ? 'password' : 'text';
+      this.className = `fas ${isText ? 'fa-eye' : 'fa-eye-slash'} input-action`;
+    });
+  });
+
+  // Password strength
+  document.getElementById('reg-pwd').addEventListener('input', function() {
+    const v = this.value;
+    const bar = document.getElementById('pwd-bar');
+    bar.className = 'password-strength-bar';
+    if (v.length === 0) return;
+    if (v.length < 6) bar.classList.add('strength-weak');
+    else if (v.length < 10 || !/[A-Z]/.test(v) || !/[0-9]/.test(v))
+      bar.classList.add('strength-medium');
+    else bar.classList.add('strength-strong');
+  });
+
+  document.getElementById('register-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const fields = {
+      nom:    document.getElementById('reg-nom').value.trim(),
+      prenom: document.getElementById('reg-prenom').value.trim(),
+      email:  document.getElementById('reg-email').value.trim(),
+      tel:    document.getElementById('reg-tel').value.trim(),
+      pwd:    document.getElementById('reg-pwd').value,
+      pwd2:   document.getElementById('reg-pwd2').value,
+    };
+    const alert = document.getElementById('reg-alert');
+    const alertMsg = document.getElementById('reg-alert-msg');
+    alert.style.display = 'none';
+    document.querySelectorAll('.form-error').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
+
+    let valid = true;
+    const required = { nom: 'err-nom', prenom: 'err-prenom', tel: 'err-tel' };
+    for (const [k, errId] of Object.entries(required)) {
+      if (!fields[k]) {
+        document.getElementById(errId).classList.add('show');
+        document.getElementById(`reg-${k === 'tel' ? 'tel' : k}`).classList.add('is-invalid');
+        valid = false;
+      }
+    }
+    if (!fields.email || !/\S+@\S+\.\S+/.test(fields.email)) {
+      document.getElementById('err-reg-email').classList.add('show');
+      document.getElementById('reg-email').classList.add('is-invalid');
+      valid = false;
+    }
+    if (!fields.pwd || fields.pwd.length < 6) {
+      document.getElementById('err-reg-pwd').classList.add('show');
+      document.getElementById('reg-pwd').classList.add('is-invalid');
+      valid = false;
+    }
+    if (fields.pwd !== fields.pwd2) {
+      document.getElementById('err-pwd2').classList.add('show');
+      document.getElementById('reg-pwd2').classList.add('is-invalid');
+      valid = false;
+    }
+    if (!valid) return;
+
+    const btn = document.getElementById('reg-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner spinner-sm"></span> Création…';
+
+    try {
+      await API.register({
+        nom: fields.nom, prenom: fields.prenom,
+        email: fields.email, telephone: fields.tel,
+        motDePasse: fields.pwd,
+      });
+      Toast.success('Compte créé avec succès ! Redirection…');
+      setTimeout(() => window.location.href = '../index.html', 1500);
+    } catch (err) {
+      alert.style.display = 'flex';
+      alertMsg.textContent = getErrorMessage(err);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-user-plus"></i> Créer mon compte';
+    }
+  });
+</script>
+</body>
+</html>

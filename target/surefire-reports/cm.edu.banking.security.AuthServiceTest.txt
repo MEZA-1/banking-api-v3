@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: cm.edu.banking.security.AuthServiceTest
--------------------------------------------------------------------------------
-Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 18.97 s -- in cm.edu.banking.security.AuthServiceTest

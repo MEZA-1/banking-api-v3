@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: cm.edu.banking.controller.AuthControllerTest
--------------------------------------------------------------------------------
-Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.32 s -- in cm.edu.banking.controller.AuthControllerTest

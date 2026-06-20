@@ -7,7 +7,7 @@
 
 // ── Configuration ─────────────────────────────────────────────
 const CONFIG = {
-  BASE_URL: 'http://localhost:8080',
+  BASE_URL: 'https://banking-api-v3.onrender.com',
   TOKEN_KEY: 'banking_token',
   USER_KEY:  'banking_user',
 };

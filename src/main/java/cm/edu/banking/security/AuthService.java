@@ -216,6 +216,7 @@ public class AuthService {
                 .nomComplet(user.getPrenom() + " " + user.getNom())
                 .email(user.getEmail())
                 .role(user.getRole())
+                .telephone(user.getTelephone())
                 .build();
     }
 }

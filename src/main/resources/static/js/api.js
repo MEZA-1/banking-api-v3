@@ -7,6 +7,7 @@
 
 // ── Configuration ─────────────────────────────────────────────
 const CONFIG = {
+  //BASE_URL: 'http://localhost:8080',
   BASE_URL: 'https://banking-api-v3.onrender.com',
   TOKEN_KEY: 'banking_token',
   USER_KEY:  'banking_user',
@@ -102,6 +103,7 @@ const API = {
   createSuperviseur(data)              { return this.post('/api/admin/superviseurs', data); },
 
   // Superviseur
+  getBanqueSuperviseur(banqueId)       { return this.get(`/api/admin/banques/${banqueId}`); },
   getAgents()                          { return this.get('/api/superviseur/agents'); },
   createAgent(data)                    { return this.post('/api/superviseur/agents', data); },
   getClients()                         { return this.get('/api/superviseur/clients'); },
@@ -119,6 +121,7 @@ const API = {
   // Client
   createCompte(data)                   { return this.post('/api/client/compte', data); },
   getMonCompteClient()                 { return this.get('/api/client/compte'); },
+  getmonprofil()                       { return this.get('/api/utilisateurs/me');},
   transfert(data)                      { return this.post('/api/client/transfert', data); },
   getHistoriqueClient(page = 0)        { return this.get(`/api/client/historique?page=${page}&size=20`); },
 };

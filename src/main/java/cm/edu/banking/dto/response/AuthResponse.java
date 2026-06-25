@@ -46,6 +46,9 @@ public class AuthResponse {
 
     /** Adresse e-mail de l'utilisateur authentifié. */
     private String email;
+    
+    /** Numéro de téléphone de l'utilisateur authentifié. */
+    private String telephone;
 
     /**
      * Rôle de l'utilisateur authentifié, permettant au client de connaître

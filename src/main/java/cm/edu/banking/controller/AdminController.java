@@ -45,7 +45,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISEUR')")
 @Tag(name = "Administration", description = "Opérations réservées à l'administrateur global")
 @SecurityRequirement(name = "bearerAuth")
 public class AdminController {
@@ -65,6 +65,7 @@ public class AdminController {
      * @param request les données de la banque (nom, montantInitial ≥ 2 000 000 FCFA)
      * @return {@code 201 Created} avec le DTO de la banque créée
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/banques")
     @Operation(
             summary = "Créer une banque",
@@ -87,6 +88,7 @@ public class AdminController {
      *
      * @return {@code 200 OK} avec la liste des banques
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/banques")
     @Operation(summary = "Lister toutes les banques")
     @ApiResponse(responseCode = "200", description = "Liste des banques")
@@ -100,6 +102,7 @@ public class AdminController {
      * @param banqueId l'identifiant de la banque
      * @return {@code 200 OK} avec le DTO de la banque
      */
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISEUR')")
     @GetMapping("/banques/{banqueId}")
     @Operation(summary = "Consulter une banque")
     @ApiResponses({
@@ -121,6 +124,7 @@ public class AdminController {
      * @param banqueId l'identifiant de la banque à suspendre
      * @return {@code 200 OK} avec le DTO de la banque mise à jour
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/banques/{banqueId}/suspendre")
     @Operation(summary = "Suspendre une banque")
     @ApiResponses({
@@ -139,6 +143,7 @@ public class AdminController {
      * @param banqueId l'identifiant de la banque à réactiver
      * @return {@code 200 OK} avec le DTO de la banque mise à jour
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/banques/{banqueId}/reactiver")
     @Operation(summary = "Réactiver une banque suspendue")
     @ApiResponses({
@@ -161,6 +166,7 @@ public class AdminController {
      * @param request  le montant à retirer et une description optionnelle
      * @return {@code 200 OK} avec le DTO de l'opération enregistrée
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/banques/{banqueId}/retrait")
     @Operation(
             summary = "Retrait administrateur sur une banque",
@@ -187,6 +193,7 @@ public class AdminController {
      * @param pageable paramètres de pagination (page, size, sort)
      * @return {@code 200 OK} avec la page d'opérations
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/banques/{banqueId}/historique")
     @Operation(summary = "Historique paginé des opérations d'une banque")
     public ResponseEntity<Page<OperationResponse>> getHistoriqueBanque(
@@ -205,6 +212,7 @@ public class AdminController {
      *
      * @return {@code 200 OK} avec la liste des utilisateurs
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/utilisateurs")
     @Operation(summary = "Lister tous les utilisateurs de la plateforme")
     public ResponseEntity<List<UserResponse>> listerUtilisateurs() {
@@ -222,6 +230,7 @@ public class AdminController {
      *                sa banque de rattachement
      * @return {@code 201 Created} avec le DTO du superviseur créé
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/superviseurs")
     @Operation(
             summary = "Créer un superviseur",

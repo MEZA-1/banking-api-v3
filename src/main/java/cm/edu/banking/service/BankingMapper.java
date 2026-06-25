@@ -24,14 +24,34 @@ import java.math.BigDecimal;
 @Component
 public class BankingMapper {
 
-    /**
-     * Convertit une entité {@link User} en {@link UserResponse}.
+	   /**
+     * Convertit un {@link User} en {@link UserResponse} sans compte associé.
+     *
+     * <p>Utiliser {@link #toUserResponse(User, CompteBancaire)} dès qu'un
+     * compte bancaire est disponible pour peupler les champs
+     * {@code numeroCompte}, {@code soldeCompte} et {@code statutCompte}.</p>
      *
      * @param user l'entité à convertir
-     * @return le DTO de réponse correspondant
+     * @return le DTO de réponse (champs compte = {@code null})
      */
     public UserResponse toUserResponse(User user) {
-        return UserResponse.builder()
+        return toUserResponse(user, user.getCompteBancaire());
+    }
+
+    /**
+     * Convertit un {@link User} en {@link UserResponse} en embarquant
+     * les informations du compte bancaire associé lorsqu'il est fourni.
+     *
+     * <p>Cette surcharge est utilisée dans les méthodes de listing du
+     * {@link SuperviseurService} où le compte est déjà chargé en mémoire
+     * (évite un accès Lazy supplémentaire).</p>
+     *
+     * @param user   l'entité utilisateur à convertir
+     * @param compte le compte bancaire associé, peut être {@code null}
+     * @return le DTO de réponse avec les champs compte renseignés si disponibles
+     */
+    public UserResponse toUserResponse(User user, CompteBancaire compte) {
+        UserResponse.UserResponseBuilder builder = UserResponse.builder()
                 .id(user.getId())
                 .nom(user.getNom())
                 .prenom(user.getPrenom())
@@ -40,8 +60,16 @@ public class BankingMapper {
                 .role(user.getRole())
                 .banqueId(user.getBanque() != null ? user.getBanque().getId() : null)
                 .nomBanque(user.getBanque() != null ? user.getBanque().getNom() : null)
-                .dateCreation(user.getDateCreation())
-                .build();
+                .dateCreation(user.getDateCreation());
+
+        if (compte != null) {
+            builder.compteId(compte.getId())
+                   .numeroCompte(compte.getNumeroCompte())
+                   .soldeCompte(compte.getSolde())
+                   .statutCompte(compte.getStatut());
+        }
+
+        return builder.build();
     }
 
     /**

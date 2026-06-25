@@ -123,26 +123,45 @@ public class SuperviseurService {
     // =========================================================================
 
     /**
-     * Retourne la liste des agents appartenant à la banque du superviseur.
+     * Retourne la liste des agents appartenant à la banque du superviseur,
+     * avec les informations de leur compte bancaire (numéro, solde, statut).
+     *
+     * <p>Pour chaque agent, le compte bancaire est récupéré depuis le
+     * repository et transmis au mapper via la surcharge
+     * {@link BankingMapper#toUserResponse(User, CompteBancaire)}, ce qui
+     * permet d'inclure {@code numeroCompte}, {@code soldeCompte} et
+     * {@code statutCompte} directement dans le {@link UserResponse}.</p>
      *
      * @param superviseur le superviseur connecté
-     * @return la liste des agents de la banque
+     * @return la liste des agents de la banque avec leurs informations de compte
      */
     @Transactional(readOnly = true)
     public List<UserResponse> listerAgents(User superviseur) {
         Long banqueId = superviseur.getBanque().getId();
         return userRepository.findByBanqueIdAndRole(banqueId, Role.AGENT)
                 .stream()
-                .map(mapper::toUserResponse)
+                .map(agent -> {
+                    // Chargement explicite du compte pour éviter LazyInitializationException
+                    // et passer le compte au mapper via la surcharge dédiée
+                    CompteBancaire compte = compteBancaireRepository
+                            .findByUtilisateurId(agent.getId())
+                            .orElse(null);
+                    return mapper.toUserResponse(agent, compte);
+                })
                 .toList();
     }
 
     /**
      * Retourne la liste des clients dont le compte bancaire est rattaché
-     * à la banque du superviseur.
+     * à la banque du superviseur, avec les informations de compte intégrées.
+     *
+     * <p>La requête principale porte sur {@code CompteBancaire} (car la
+     * banque d'un client est déterminée par son compte, pas directement
+     * par son entité {@link User}). Le compte est passé au mapper via la
+     * surcharge {@link BankingMapper#toUserResponse(User, CompteBancaire)}.</p>
      *
      * @param superviseur le superviseur connecté
-     * @return la liste des clients de la banque
+     * @return la liste des clients de la banque avec leurs informations de compte
      */
     @Transactional(readOnly = true)
     public List<UserResponse> listerClients(User superviseur) {
@@ -150,7 +169,8 @@ public class SuperviseurService {
         return compteBancaireRepository
                 .findByBanqueIdAndUtilisateurRole(banqueId, Role.CLIENT)
                 .stream()
-                .map(c -> mapper.toUserResponse(c.getUtilisateur()))
+                // Le compte est disponible directement — pas de second accès BDD
+                .map(compte -> mapper.toUserResponse(compte.getUtilisateur(), compte))
                 .toList();
     }
 

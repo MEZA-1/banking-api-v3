@@ -40,6 +40,9 @@
     <div class="nav-item" id="nav-historique" onclick="showSection('historique')">
       <i class="fas fa-history"></i> Transactions
     </div>
+    <div class="nav-item" id="nav-mabanque" onclick="showSection('mabanque')">
+      <i class="fas fa-landmark"></i> Ma Banque
+    </div>
   </nav>
   <div class="sidebar-footer">
     <button class="btn-logout" onclick="Auth.logout()">
@@ -65,10 +68,56 @@
 
     <!-- ── DASHBOARD ── -->
     <section id="sec-dashboard">
+
+      <!-- Carte banque supervisée -->
+      <div id="banque-card" style="margin-bottom:1.5rem;display:none">
+        <div style="background:linear-gradient(135deg,var(--deep) 0%,var(--mid) 100%);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:1.5rem;position:relative;overflow:hidden">
+          <div style="position:absolute;right:-20px;top:-20px;width:120px;height:120px;background:rgba(255,255,255,.05);border-radius:50%"></div>
+          <div style="position:absolute;right:60px;bottom:-30px;width:80px;height:80px;background:rgba(255,255,255,.04);border-radius:50%"></div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;position:relative;z-index:1">
+            <div>
+              <div style="font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">Banque supervisée</div>
+              <div style="font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:.15rem" id="bk-nom">—</div>
+              <div id="bk-statut-badge"></div>
+            </div>
+            <div style="display:flex;gap:2rem;flex-wrap:wrap">
+              <div style="text-align:right">
+                <div style="font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem">
+                  <i class="fas fa-coins" style="color:var(--cyan);margin-right:4px"></i>Montant Actif
+                </div>
+                <div style="font-family:var(--font-display);font-size:1.35rem;font-weight:700;color:var(--cyan)" id="bk-actif">—</div>
+                <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:2px">Trésorerie disponible</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem">
+                  <i class="fas fa-layer-group" style="color:#fbbf24;margin-right:4px"></i>Montant Ligne
+                </div>
+                <div style="font-family:var(--font-display);font-size:1.35rem;font-weight:700;color:#fbbf24" id="bk-ligne">—</div>
+                <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:2px">Σ soldes clients + agents</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem">
+                  <i class="fas fa-calendar" style="color:rgba(255,255,255,.4);margin-right:4px"></i>Créée le
+                </div>
+                <div style="font-size:.85rem;color:rgba(255,255,255,.7)" id="bk-date">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-user-cog"></i></div><div><div class="stat-label">Agents</div><div class="stat-value" id="st-agents">—</div></div></div>
         <div class="stat-card"><div class="stat-icon green"><i class="fas fa-users"></i></div><div><div class="stat-label">Clients</div><div class="stat-value" id="st-clients">—</div></div></div>
         <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-exchange-alt"></i></div><div><div class="stat-label">Opérations</div><div class="stat-value" id="st-ops">—</div></div></div>
+        <div class="stat-card" onclick="showSection('mabanque')" style="cursor:pointer;border-color:rgba(44,116,179,.3)">
+          <div class="stat-icon blue"><i class="fas fa-landmark"></i></div>
+          <div><div class="stat-label">Montant Actif</div><div class="stat-value" id="st-actif" style="font-size:1rem;color:var(--cyan)">—</div></div>
+        </div>
+        <div class="stat-card" onclick="showSection('mabanque')" style="cursor:pointer;border-color:rgba(245,158,11,.3)">
+          <div class="stat-icon orange"><i class="fas fa-layer-group"></i></div>
+          <div><div class="stat-label">Montant Ligne</div><div class="stat-value" id="st-ligne" style="font-size:1rem;color:#fbbf24">—</div></div>
+        </div>
       </div>
 
       <div class="grid-2" style="gap:1.25rem">
@@ -156,6 +205,136 @@
         </div>
         <div class="card-footer"><div class="pagination" id="pg-hist"></div></div>
       </div>
+    </section>
+
+    <!-- ── MA BANQUE ── -->
+    <section id="sec-mabanque" style="display:none">
+      <div class="section-header">
+        <h3 class="section-title">Ma Banque</h3>
+        <div class="section-actions">
+          <button class="btn btn-secondary btn-sm" onclick="loadMaBanque()">
+            <i class="fas fa-sync-alt"></i> Actualiser
+          </button>
+        </div>
+      </div>
+
+      <!-- Carte principale banque -->
+      <div id="mabanque-loading" style="text-align:center;padding:3rem;color:var(--muted)">
+        <div class="spinner" style="margin:0 auto 1rem"></div>
+        Chargement des données…
+      </div>
+
+      <div id="mabanque-content" style="display:none">
+
+        <!-- Header banque -->
+        <div style="background:linear-gradient(135deg,var(--deep) 0%,var(--mid) 60%,var(--accent) 100%);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius);padding:2rem;margin-bottom:1.5rem;position:relative;overflow:hidden">
+          <div style="position:absolute;right:-40px;top:-40px;width:200px;height:200px;background:rgba(255,255,255,.04);border-radius:50%"></div>
+          <div style="position:absolute;right:80px;bottom:-50px;width:130px;height:130px;background:rgba(255,255,255,.03);border-radius:50%"></div>
+          <div style="position:relative;z-index:1">
+            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
+              <div style="width:52px;height:52px;background:rgba(255,255,255,.12);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.4rem">
+                <i class="fas fa-landmark"></i>
+              </div>
+              <div>
+                <div style="font-size:.72rem;color:rgba(255,255,255,.55);letter-spacing:.08em;text-transform:uppercase">Banque supervisée</div>
+                <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:700" id="mb-nom">—</div>
+              </div>
+              <div style="margin-left:auto" id="mb-statut-wrap"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.25rem">
+              <div style="background:rgba(0,0,0,.15);border-radius:var(--radius-sm);padding:1rem">
+                <div style="font-size:.7rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem">
+                  <i class="fas fa-calendar-alt" style="margin-right:4px"></i>Date de création
+                </div>
+                <div style="font-weight:600" id="mb-date">—</div>
+              </div>
+              <div style="background:rgba(0,0,0,.15);border-radius:var(--radius-sm);padding:1rem">
+                <div style="font-size:.7rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem">
+                  <i class="fas fa-piggy-bank" style="margin-right:4px"></i>Capital initial
+                </div>
+                <div style="font-weight:600;font-family:var(--font-display)" id="mb-initial">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cartes Montant Actif + Montant Ligne -->
+        <div class="grid-2" style="margin-bottom:1.5rem">
+
+          <!-- Montant Actif -->
+          <div style="background:rgba(44,116,179,.08);border:1px solid rgba(44,116,179,.25);border-radius:var(--radius);padding:1.5rem;position:relative;overflow:hidden">
+            <div style="position:absolute;right:-20px;bottom:-20px;font-size:5rem;color:rgba(44,116,179,.08)">
+              <i class="fas fa-coins"></i>
+            </div>
+            <div style="position:relative;z-index:1">
+              <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+                <div style="width:36px;height:36px;background:rgba(44,116,179,.2);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center">
+                  <i class="fas fa-coins" style="color:var(--cyan)"></i>
+                </div>
+                <div>
+                  <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Montant Actif</div>
+                  <div style="font-size:.72rem;color:rgba(255,255,255,.4)">Trésorerie disponible</div>
+                </div>
+              </div>
+              <div style="font-family:var(--font-display);font-size:1.75rem;font-weight:700;color:var(--cyan);margin-bottom:.4rem" id="mb-actif">—</div>
+              <div style="font-size:.78rem;color:var(--muted)">
+                Capital initial : <span id="mb-actif-pct" style="color:var(--cyan);font-weight:600">—</span> utilisé
+              </div>
+              <div style="margin-top:.75rem;height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">
+                <div id="mb-actif-bar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));border-radius:99px;transition:width .5s ease;width:0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Montant Ligne -->
+          <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:var(--radius);padding:1.5rem;position:relative;overflow:hidden">
+            <div style="position:absolute;right:-20px;bottom:-20px;font-size:5rem;color:rgba(245,158,11,.08)">
+              <i class="fas fa-layer-group"></i>
+            </div>
+            <div style="position:relative;z-index:1">
+              <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+                <div style="width:36px;height:36px;background:rgba(245,158,11,.2);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center">
+                  <i class="fas fa-layer-group" style="color:#fbbf24"></i>
+                </div>
+                <div>
+                  <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Montant Ligne</div>
+                  <div style="font-size:.72rem;color:rgba(255,255,255,.4)">Σ soldes clients + agents</div>
+                </div>
+              </div>
+              <div style="font-family:var(--font-display);font-size:1.75rem;font-weight:700;color:#fbbf24;margin-bottom:.4rem" id="mb-ligne">—</div>
+              <div style="font-size:.78rem;color:var(--muted)">
+                Engagement total :
+                <span id="mb-ligne-pct" style="color:#fbbf24;font-weight:600">—</span> du capital initial
+              </div>
+              <div style="margin-top:.75rem;height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">
+                <div id="mb-ligne-bar" style="height:100%;background:linear-gradient(90deg,#f59e0b,#fbbf24);border-radius:99px;transition:width .5s ease;width:0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tableau récapitulatif -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><i class="fas fa-table"></i> Récapitulatif financier</span>
+            <span style="font-size:.78rem;color:var(--muted)">Dernière mise à jour : <span id="mb-update-time">—</span></span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Indicateur</th>
+                  <th>Valeur</th>
+                  <th>% du capital initial</th>
+                  <th>Interprétation</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-mabanque-recap"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /mabanque-content -->
     </section>
 
   </div>
@@ -246,7 +425,10 @@
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById(`sec-${name}`).style.display = '';
     document.getElementById(`nav-${name}`).classList.add('active');
-    const titles = { dashboard:'Tableau de bord', agents:'Agents', clients:'Clients', historique:'Transactions' };
+    const titles = {
+      dashboard:'Tableau de bord', agents:'Agents', clients:'Clients',
+      historique:'Transactions', mabanque:'Ma Banque'
+    };
     document.getElementById('page-title').textContent = titles[name] || name;
     currentSection = name;
     loadCurrentSection();
@@ -258,11 +440,13 @@
     if (currentSection === 'agents')    loadAgents();
     if (currentSection === 'clients')   loadClients();
     if (currentSection === 'historique') loadHistorique(0);
+    if (currentSection === 'mabanque')  loadMaBanque();
   }
 
   // ── Dashboard ─────────────────────────────────────────────────
   async function loadDashboard() {
     try {
+      const user = Auth.getUser();
       const [agents, clients, hist] = await Promise.all([
         API.getAgents(), API.getClients(), API.getHistoriqueSuperviseur(0)
       ]);
@@ -270,26 +454,43 @@
       document.getElementById('st-agents').textContent  = agents.length;
       document.getElementById('st-clients').textContent = clients.length;
       document.getElementById('st-ops').textContent = hist.totalElements || 0;
+      
+    	  
+        try {
+          const banque = await API.getBanqueSuperviseur(agents[0].banqueId);
+          // Stat cards
+          document.getElementById('st-actif').textContent = Fmt.money(banque.montantActif);
+          document.getElementById('st-ligne').textContent = Fmt.money(banque.montantLigne);
+          // Carte banque header
+          document.getElementById('bk-nom').textContent = banque.nom;
+          document.getElementById('bk-actif').textContent = Fmt.money(banque.montantActif);
+          document.getElementById('bk-ligne').textContent = Fmt.money(banque.montantLigne);
+          document.getElementById('bk-date').textContent = Fmt.dateShort(banque.dateCreation);
+          document.getElementById('bk-statut-badge').innerHTML = banque.statut === 'ACTIVE'
+            ? '<span class="badge badge-success"><i class="fas fa-circle" style="font-size:6px"></i> Active</span>'
+            : '<span class="badge badge-danger"><i class="fas fa-circle" style="font-size:6px"></i> Suspendue</span>';
+          document.getElementById('banque-card').style.display = '';
+        } catch(e) { /* banqueId non dispo, on ignore */ }
 
       // Agents dash
       const tbody = document.getElementById('tbody-agents-dash');
       if (!agents.length) {
         tbody.innerHTML = '<tr class="empty-row"><td colspan="4"><i class="fas fa-user-cog"></i><br>Aucun agent</td></tr>';
-      } else {
-        tbody.innerHTML = agents.slice(0,5).map(a => {
-          const compte = a.compteBancaire;
-          return `<tr>
-            <td><strong>${a.prenom} ${a.nom}</strong></td>
-            <td class="td-mono">${compte ? Fmt.money(compte.solde) : '—'}</td>
-            <td>${compte ? Fmt.statutCompte(compte.statut) : '—'}</td>
-            <td>
-              <button class="btn btn-primary btn-sm" onclick="openAppro(${a.id},'${a.prenom} ${a.nom}','${compte?.numeroCompte||''}')">
-                <i class="fas fa-coins"></i>
-              </button>
-            </td>
-          </tr>`;
-        }).join('');
-      }
+      }else {
+          tbody.innerHTML = agents.slice(0,5).map(a => {
+              // Champs plats depuis UserResponse enrichi
+              return `<tr>
+                <td><strong>${a.prenom} ${a.nom}</strong></td>
+                <td class="td-mono">${a.soldeCompte != null ? Fmt.money(a.soldeCompte) : '—'}</td>
+                <td>${a.statutCompte ? Fmt.statutCompte(a.statutCompte) : '—'}</td>
+                <td>
+                  <button class="btn btn-primary btn-sm" onclick="openAppro(${a.id},'${a.prenom} ${a.nom}','${a.numeroCompte||''}')">
+                    <i class="fas fa-coins"></i>
+                  </button>
+                </td>
+              </tr>`;
+            }).join('');
+          }
 
       // Hist dash
       const tbodyH = document.getElementById('tbody-hist-dash');
@@ -323,18 +524,19 @@
       return;
     }
     tbody.innerHTML = data.map(a => {
-      const c = a.compteBancaire;
-      const statut = c ? c.statut : null;
+      // Les infos de compte sont désormais des champs plats dans UserResponse
+      const hasCompte  = !!a.numeroCompte;
+      const statut     = a.statutCompte || null;
       return `<tr>
         <td><strong>${a.prenom} ${a.nom}</strong></td>
         <td class="text-sm">${a.email}</td>
         <td class="text-sm">${a.telephone || '—'}</td>
-        <td class="td-mono text-sm">${c ? c.numeroCompte : '—'}</td>
-        <td class="td-mono">${c ? Fmt.money(c.solde) : '—'}</td>
-        <td>${c ? Fmt.statutCompte(statut) : '—'}</td>
+        <td class="td-mono text-sm">${hasCompte ? a.numeroCompte : '—'}</td>
+        <td class="td-mono">${hasCompte ? Fmt.money(a.soldeCompte) : '—'}</td>
+        <td>${hasCompte ? Fmt.statutCompte(statut) : '—'}</td>
         <td style="display:flex;gap:4px">
           <button class="btn btn-primary btn-sm" title="Approvisionner"
-            onclick="openAppro(${a.id},'${a.prenom} ${a.nom}','${c?.numeroCompte||''}')">
+            onclick="openAppro(${a.id},'${a.prenom} ${a.nom}','${a.numeroCompte||''}')">
             <i class="fas fa-coins"></i>
           </button>
           ${statut === 'ACTIF'
@@ -360,8 +562,10 @@
       const data = await API.getClients();
       allClients = data;
       renderClients(data);
+      
     } catch(err) { Toast.error(getErrorMessage(err)); }
   }
+ 
 
   function renderClients(data) {
     const tbody = document.getElementById('tbody-clients');
@@ -370,15 +574,16 @@
       return;
     }
     tbody.innerHTML = data.map(c => {
-      const compte = c.compteBancaire;
-      const statut = compte ? compte.statut : null;
+      // Les infos de compte sont des champs plats dans UserResponse
+      const hasCompte = !!c.numeroCompte;
+      const statut    = c.statutCompte || null;
       return `<tr>
         <td><strong>${c.prenom} ${c.nom}</strong></td>
         <td class="text-sm">${c.email}</td>
         <td class="text-sm">${c.telephone || '—'}</td>
-        <td class="td-mono text-sm">${compte ? compte.numeroCompte : '—'}</td>
-        <td class="td-mono">${compte ? Fmt.money(compte.solde) : '—'}</td>
-        <td>${compte ? Fmt.statutCompte(statut) : '—'}</td>
+        <td class="td-mono text-sm">${hasCompte ? c.numeroCompte : '—'}</td>
+        <td class="td-mono">${hasCompte ? Fmt.money(c.soldeCompte) : '—'}</td>
+        <td>${hasCompte ? Fmt.statutCompte(statut) : '—'}</td>
         <td>
           ${statut === 'ACTIF'
             ? `<button class="btn btn-warning btn-sm" onclick="confirmAction('Suspendre le compte de <strong>${c.prenom} ${c.nom}</strong> ?',() => toggleCompte(${c.id},'suspendre'))"><i class="fas fa-ban"></i></button>`
@@ -521,6 +726,114 @@
     document.getElementById('confirm-msg').innerHTML = msg;
     document.getElementById('btn-confirm').onclick = cb;
     Modal.open('modal-confirm');
+  }
+
+  // ── Ma Banque ─────────────────────────────────────────────────
+  async function loadMaBanque() {
+    const user = Auth.getUser();
+    document.getElementById('mabanque-loading').style.display = '';
+    document.getElementById('mabanque-content').style.display = 'none';
+
+    // Récupérer le banqueId — soit depuis Auth.getUser(), soit via un agent de la banque
+    let banqueId = user?.banqueId;
+    if (!banqueId) {
+      // Fallback : déduire via les agents
+      try {
+        const agents = await API.getAgents();
+        if (agents.length && agents[0].banqueId) banqueId = agents[0].banqueId;
+      } catch {}
+    }
+
+    if (!banqueId) {
+      document.getElementById('mabanque-loading').innerHTML =
+        '<div style="text-align:center;padding:3rem;color:var(--muted)">' +
+        '<i class="fas fa-exclamation-triangle" style="font-size:2rem;margin-bottom:.75rem;color:var(--warning);display:block"></i>' +
+        'Impossible de déterminer votre banque. Contactez un administrateur.</div>';
+      return;
+    }
+
+    try {
+      const b = await API.getBanqueSuperviseur(banqueId);
+      const pctActif  = b.montantInitial > 0
+        ? Math.min(100, (b.montantActif  / b.montantInitial * 100)).toFixed(1)
+        : 0;
+      const pctLigne  = b.montantInitial > 0
+        ? Math.min(100, (b.montantLigne  / b.montantInitial * 100)).toFixed(1)
+        : 0;
+
+      // Remplir les éléments
+      document.getElementById('mb-nom').textContent    = b.nom;
+      document.getElementById('mb-date').textContent   = Fmt.dateShort(b.dateCreation);
+      document.getElementById('mb-initial').textContent = Fmt.money(b.montantInitial);
+      document.getElementById('mb-actif').textContent  = Fmt.money(b.montantActif);
+      document.getElementById('mb-ligne').textContent  = Fmt.money(b.montantLigne);
+      document.getElementById('mb-actif-pct').textContent = pctActif + '%';
+      document.getElementById('mb-ligne-pct').textContent = pctLigne + '%';
+      document.getElementById('mb-update-time').textContent = new Date().toLocaleTimeString('fr-FR');
+
+      // Barres de progression
+      setTimeout(() => {
+        document.getElementById('mb-actif-bar').style.width = pctActif + '%';
+        document.getElementById('mb-ligne-bar').style.width = pctLigne + '%';
+      }, 100);
+
+      // Statut badge
+      document.getElementById('mb-statut-wrap').innerHTML = b.statut === 'ACTIVE'
+        ? '<span class="badge badge-success" style="font-size:.8rem;padding:5px 14px"><i class="fas fa-check-circle"></i> ACTIVE</span>'
+        : '<span class="badge badge-danger"  style="font-size:.8rem;padding:5px 14px"><i class="fas fa-ban"></i> SUSPENDUE</span>';
+
+      // Tableau récapitulatif
+      const alertActif = b.montantActif < b.montantInitial * 0.2
+        ? '<span class="badge badge-danger">⚠ Faible</span>'
+        : b.montantActif < b.montantInitial * 0.5
+          ? '<span class="badge badge-warning">Moyen</span>'
+          : '<span class="badge badge-success">Bon niveau</span>';
+
+      document.getElementById('tbody-mabanque-recap').innerHTML = `
+        <tr>
+          <td><i class="fas fa-piggy-bank text-muted" style="margin-right:6px"></i><strong>Capital Initial</strong></td>
+          <td class="td-mono">${Fmt.money(b.montantInitial)}</td>
+          <td>—</td>
+          <td><span class="badge badge-muted">Référence</span></td>
+        </tr>
+        <tr style="background:rgba(44,116,179,.05)">
+          <td><i class="fas fa-coins" style="color:var(--cyan);margin-right:6px"></i><strong>Montant Actif</strong></td>
+          <td class="td-mono" style="color:var(--cyan)">${Fmt.money(b.montantActif)}</td>
+          <td>${pctActif}%
+            <div style="margin-top:4px;height:4px;background:rgba(255,255,255,.08);border-radius:99px;width:80px;overflow:hidden">
+              <div style="height:100%;background:var(--cyan);border-radius:99px;width:${pctActif}%"></div>
+            </div>
+          </td>
+          <td>${alertActif}</td>
+        </tr>
+        <tr>
+          <td><i class="fas fa-layer-group" style="color:#fbbf24;margin-right:6px"></i><strong>Montant Ligne</strong></td>
+          <td class="td-mono" style="color:#fbbf24">${Fmt.money(b.montantLigne)}</td>
+          <td>${pctLigne}%
+            <div style="margin-top:4px;height:4px;background:rgba(255,255,255,.08);border-radius:99px;width:80px;overflow:hidden">
+              <div style="height:100%;background:#f59e0b;border-radius:99px;width:${pctLigne}%"></div>
+            </div>
+          </td>
+          <td><span class="badge badge-muted">Σ clients + agents</span></td>
+        </tr>
+        <tr style="background:rgba(34,197,94,.04)">
+          <td><i class="fas fa-balance-scale" style="color:var(--success);margin-right:6px"></i><strong>Marge disponible</strong></td>
+          <td class="td-mono" style="color:var(--success)">${Fmt.money(b.montantActif - b.montantLigne)}</td>
+          <td>${(((b.montantActif - b.montantLigne) / b.montantInitial) * 100).toFixed(1)}%</td>
+          <td><span class="badge badge-success">Actif – Ligne</span></td>
+        </tr>
+      `;
+
+      document.getElementById('mabanque-loading').style.display = 'none';
+      document.getElementById('mabanque-content').style.display = '';
+    } catch(err) {
+      document.getElementById('mabanque-loading').innerHTML =
+        `<div style="text-align:center;padding:2rem;color:var(--danger)">
+          <i class="fas fa-exclamation-circle" style="font-size:2rem;margin-bottom:.5rem;display:block"></i>
+          ${getErrorMessage(err)}
+        </div>`;
+      Toast.error(getErrorMessage(err));
+    }
   }
 
   function exportCSV() {

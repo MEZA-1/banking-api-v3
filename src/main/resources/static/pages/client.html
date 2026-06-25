@@ -537,15 +537,18 @@
 
   // ── Profil ───────────────────────────────────────────────────
   async function loadProfil() {
-    const user = Auth.getUser();
+   // const userp = Auth.getUser();
+    const user = await API.getmonprofil();
     if (!user) return;
-    const parts = (user.nomComplet||'').split(' ');
-    document.getElementById('profil-avatar').textContent = Fmt.initials(parts[1]||'', parts[0]||'');
+    console.log('Profil user:', user);
+    //const parts = (user.nomComplet||'').split(' ');
+    document.getElementById('profil-avatar').textContent = Fmt.initials(user.nom||'', user.prenom||'');
     document.getElementById('profil-nom').textContent    = user.nomComplet||'—';
     document.getElementById('profil-email').textContent  = user.email||'—';
-    document.getElementById('pf-nom').textContent    = parts[1]||'—';
-    document.getElementById('pf-prenom').textContent = parts[0]||'—';
+    document.getElementById('pf-nom').textContent    = user.nom||'_'; //parts[1]||'—';
+    document.getElementById('pf-prenom').textContent = user.prenom||'_'; //parts[0]||'—';
     document.getElementById('pf-email').textContent  = user.email||'—';
+    document.getElementById('pf-tel').textContent  = user.telephone||'—';
 
     try {
       const compte = await API.getMonCompteClient();

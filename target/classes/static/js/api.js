@@ -7,8 +7,8 @@
 
 // ── Configuration ─────────────────────────────────────────────
 const CONFIG = {
-  //BASE_URL: 'http://localhost:8080',
-  BASE_URL: 'https://banking-api-v3.onrender.com',
+  BASE_URL: 'http://localhost:8080',
+  //BASE_URL: 'https://banking-api-v3.onrender.com',
   TOKEN_KEY: 'banking_token',
   USER_KEY:  'banking_user',
 };
@@ -115,8 +115,31 @@ const API = {
   // Agent
   getMonCompteAgent()                  { return this.get('/api/agent/mon-compte'); },
   depot(data)                          { return this.post('/api/agent/depot', data); },
-  retrait(data)                        { return this.post('/api/agent/retrait', data); },
+ // retrait(data)                        { return this.post('/api/agent/retrait', data); },
   getHistoriqueAgent(page = 0)         { return this.get(`/api/agent/historique?page=${page}&size=20`); },
+  // ── Agent — Retrait sécurisé (2 étapes OTP) ───────────────────
+    /**
+     * ÉTAPE 1 — Initie un retrait pour un client.
+     * Génère un OTP 6 chiffres valable 5 min et le notifie au client.
+     * Le retrait N'EST PAS encore exécuté.
+     *
+     * @param {Object} data  { clientId, montant, description? }
+     * @returns {RetraitEnAttenteResponse}  — contient demandeId, récap financier, OTP (démo)
+     */
+    initierRetrait(data) {
+      return this.post('/api/agent/retrait/initier', data);
+    },
+
+    /**
+     * ÉTAPE 2 — Confirme le retrait en vérifiant OTP + mot de passe client.
+     * Si les deux facteurs sont valides, le retrait est exécuté.
+     *
+     * @param {Object} data  { demandeId, codeOtp, motDePasseClient }
+     * @returns {OperationResponse}  — opération financière exécutée
+     */
+    confirmerRetrait(data) {
+      return this.post('/api/agent/retrait/confirmer', data);
+    },
 
   // Client
   createCompte(data)                   { return this.post('/api/client/compte', data); },

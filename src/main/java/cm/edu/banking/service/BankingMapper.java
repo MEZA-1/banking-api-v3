@@ -1,14 +1,18 @@
 package cm.edu.banking.service;
 
+import java.math.BigDecimal;
+
+import org.springframework.stereotype.Component;
+
 import cm.edu.banking.dto.response.CompteBancaireResponse;
 import cm.edu.banking.dto.response.OperationResponse;
+import cm.edu.banking.dto.response.RetraitEnAttenteResponse;
 import cm.edu.banking.dto.response.UserResponse;
 import cm.edu.banking.model.CompteBancaire;
 import cm.edu.banking.model.Operation;
+import cm.edu.banking.model.RetraitEnAttente;
 import cm.edu.banking.model.User;
-import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
+import cm.edu.banking.model.enums.StatutRetrait;
 
 /**
  * Composant utilitaire de conversion (mapping) entre les entités JPA
@@ -138,4 +142,7 @@ public class BankingMapper {
                 .dateOperation(op.getDateOperation())
                 .build();
     }
+    
 }
+
+

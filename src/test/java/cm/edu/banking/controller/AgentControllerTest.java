@@ -180,7 +180,7 @@ class AgentControllerTest {
                     .andExpect(jsonPath("$.validationErrors.clientId").exists());
         }
     }
-
+/*
     // =========================================================================
     //  POST /api/agent/retrait
     // =========================================================================
@@ -251,5 +251,5 @@ class AgentControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.validationErrors.montant").exists());
         }
-    }
+    }*/
 }

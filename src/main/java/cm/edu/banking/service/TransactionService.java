@@ -73,6 +73,8 @@ public class TransactionService {
     /** Taux de frais pour le transfert interbancaire (4 %). */
     private static final BigDecimal TAUX_FRAIS_INTERBANCAIRE =
             new BigDecimal("0.04");
+    private static final BigDecimal MONTANT_MIN_DEPOSIT = new BigDecimal("1000");
+    private static final BigDecimal MONTANT_MAX_DEPOSIT = new BigDecimal("1000000");
 
     private final CompteBancaireRepository compteBancaireRepository;
     private final BanqueRepository banqueRepository;
@@ -187,7 +189,22 @@ public class TransactionService {
         }
 
         BigDecimal montant = request.getMontant();
-
+        
+         if (montant.compareTo(BigDecimal.ZERO) <= 0 && montant.compareTo(MONTANT_MIN_DEPOSIT) < 0) {
+			throw new BankingException(
+					"Le montant du depot doit être supérieur à"+MONTANT_MIN_DEPOSIT+"  FCFA.");
+		}
+         //verifier que le montant ne depasse pas le maximum
+         
+         if(montant.compareTo(MONTANT_MAX_DEPOSIT) > 0) {
+        	 throw new BankingException(
+					 "Le montant du depot ne doit pas dépasser "+MONTANT_MAX_DEPOSIT+"  FCFA.");
+         }
+         //verifier que le client et l'gent sont de la meme banque
+         if(!compteClient.getBanque().getId().equals(compteAgent.getBanque().getId())) {
+			 throw new BankingException("Le client et l'agent doivent appartenir à la même banque pour effectuer un dépôt.");
+			 		 }
+         
         // Validation du solde agent
         if (compteAgent.getSolde().compareTo(montant) < 0) {
             throw new BankingException(
@@ -229,7 +246,7 @@ public class TransactionService {
 
         return mapper.toOperationResponse(saved);
     }
-
+/*
     // =========================================================================
     //  Skill 10 — Retrait (client via agent, frais 2 %)
     // =========================================================================
@@ -264,7 +281,7 @@ public class TransactionService {
      * @throws ResourceNotFoundException si le client ou son compte est
      *                                   introuvable
      */
-    @Transactional
+   /* @Transactional
     public OperationResponse effectuerRetrait(User agent, RetraitRequest request) {
 
         // --- Chargement et validations ---
@@ -334,7 +351,7 @@ public class TransactionService {
                 compteAgent.getNumeroCompte(), banque.getNom());
 
         return mapper.toOperationResponse(saved);
-    }
+    }*/
 
     // =========================================================================
     //  Skills 11 & 12 — Transfert interne (2 %) et interbancaire (4 %)
@@ -416,8 +433,22 @@ public class TransactionService {
         BigDecimal taux = mêmeBanque
                 ? TAUX_FRAIS_STANDARD
                 : TAUX_FRAIS_INTERBANCAIRE;
-
+        
+        //verifications prealables sur le montant du transfert
         BigDecimal montant = request.getMontant();
+        
+        //verifier que le montant est positif et superieur à 1000 et inferieur à 1000000
+        if (montant.compareTo(BigDecimal.ZERO) <= 0 && montant.compareTo(MONTANT_MIN_DEPOSIT) < 0) {
+			throw new BankingException(
+					"Le montant du transfert doit être supérieur à "+MONTANT_MIN_DEPOSIT+"  FCFA.");
+		}
+        if(montant.compareTo(MONTANT_MAX_DEPOSIT) > 0) {
+			throw new BankingException(
+					"Le montant du transfert doit être inferieur à "+MONTANT_MIN_DEPOSIT+"  FCFA.");
+		}
+        
+        
+        
         BigDecimal frais = calculerFrais(montant, taux);
         BigDecimal montantDebiteEmetteur = montant.add(frais);
 

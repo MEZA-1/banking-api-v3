@@ -32,8 +32,6 @@ cm/edu/banking/service/AdminServiceTest$CreationSuperviseurTests.class
 cm/edu/banking/service/TransactionServiceTest$TransfertInterneTests.class
 cm/edu/banking/service/TransactionServiceTest$CreationCompteTests.class
 cm/edu/banking/service/SuperviseurServiceTest.class
-cm/edu/banking/controller/AgentControllerTest$RetraitTests.class
-cm/edu/banking/service/TransactionServiceTest$RetraitTests.class
 cm/edu/banking/security/AuthServiceTest$SuperAdminInitTests.class
 cm/edu/banking/service/AdminServiceTest$RetraitAdminTests.class
 cm/edu/banking/security/AuthServiceTest$LoginTests.class

@@ -261,12 +261,13 @@
               <div>
                 <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:600" id="profil-nom">—</div>
                 <div style="color:var(--muted);font-size:.85rem" id="profil-email">—</div>
-                <div style="margin-top:4px"><span class="role-badge client">CLIENT</span></div>
+                <div style="margin-top:4px"><span class="role-badge client">CLIENT <span id ="client-id">—</span></span></div>
               </div>
             </div>
-            <div class="grid-2">
+            <div class="grid-3">
               <div><div class="form-label">Nom</div><div style="padding:.5rem 0;color:rgba(255,255,255,.85)" id="pf-nom">—</div></div>
               <div><div class="form-label">Prénom</div><div style="padding:.5rem 0;color:rgba(255,255,255,.85)" id="pf-prenom">—</div></div>
+              <div><div class="form-label">Id Client</div><div style="padding:.5rem 0;color:rgba(255,255,255,.85)" id="pf-client-id">—</div></div>
             </div>
             <div><div class="form-label">Email</div><div style="padding:.5rem 0;color:rgba(255,255,255,.85)" id="pf-email">—</div></div>
             <div><div class="form-label">Téléphone</div><div style="padding:.5rem 0;color:rgba(255,255,255,.85)" id="pf-tel">—</div></div>
@@ -543,8 +544,10 @@
     console.log('Profil user:', user);
     //const parts = (user.nomComplet||'').split(' ');
     document.getElementById('profil-avatar').textContent = Fmt.initials(user.nom||'', user.prenom||'');
-    document.getElementById('profil-nom').textContent    = user.nomComplet||'—';
+    document.getElementById('profil-nom').textContent    = user.nom+" "+user.prenom||'—';
     document.getElementById('profil-email').textContent  = user.email||'—';
+    document.getElementById('client-id').textContent = user.id|| '–';
+    document.getElementById('pf-client-id').textContent = user.id|| '–';
     document.getElementById('pf-nom').textContent    = user.nom||'_'; //parts[1]||'—';
     document.getElementById('pf-prenom').textContent = user.prenom||'_'; //parts[0]||'—';
     document.getElementById('pf-email').textContent  = user.email||'—';

@@ -4,6 +4,7 @@ cm/edu/banking/dto/request/CreateCompteBancaireRequest.class
 cm/edu/banking/dto/request/ApprovisionnerAgentRequest.class
 cm/edu/banking/model/RetraitEnAttente.class
 cm/edu/banking/dto/response/CompteBancaireResponse$CompteBancaireResponseBuilder.class
+cm/edu/banking/dto/response/BanqueActiveProjection.class
 cm/edu/banking/controller/AuthController.class
 cm/edu/banking/service/NotificationService.class
 cm/edu/banking/security/jwt/JwtTokenProvider.class

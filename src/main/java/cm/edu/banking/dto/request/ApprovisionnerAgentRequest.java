@@ -36,4 +36,8 @@ public class ApprovisionnerAgentRequest {
 
     /** Description optionnelle de l'approvisionnement. */
     private String description;
+    
+    //id de la banque
+    
+    //private long idBanque;
 }

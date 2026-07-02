@@ -1,7 +1,23 @@
 package cm.edu.banking.controller;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import cm.edu.banking.dto.request.CreateCompteBancaireRequest;
 import cm.edu.banking.dto.request.TransfertRequest;
+import cm.edu.banking.dto.response.BanqueActiveProjection;
 import cm.edu.banking.dto.response.CompteBancaireResponse;
 import cm.edu.banking.dto.response.OperationResponse;
 import cm.edu.banking.model.User;
@@ -16,14 +32,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
 
 /**
  * Contrôleur REST exposant les endpoints réservés au rôle
@@ -181,5 +189,15 @@ public class ClientController {
         User client = securityUtils.getUtilisateurConnecte();
         return ResponseEntity.ok(
                 transactionService.getMonHistorique(client, pageable));
+    }
+    
+    @GetMapping("/banques")
+    @Operation(
+    		summary = "consulter la lister des banques avant de pouvoir creer une banque"
+    		)
+    public ResponseEntity<List<BanqueActiveProjection>> getBanqueActive(){
+    	
+    	return ResponseEntity.ok(transactionService.getBanqueUser());
+    	
     }
 }

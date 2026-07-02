@@ -561,37 +561,72 @@
     } catch {}
   }
 
-  // ── Create compte ─────────────────────────────────────────────
+// ── Create compte ─────────────────────────────────────────────
   async function openModalCreateCompte() {
     const sel = document.getElementById('cc-banque');
-    sel.innerHTML = '<option value="">Chargement…</option>';
-    try {
-      // We need to fetch public banques - use admin endpoint
-      // In real app, expose a public endpoint; here we fallback
-      sel.innerHTML = '<option value="">Saisissez l\'ID de votre banque manuellement</option>';
-    } catch {}
-    // Simple: show a text input instead
-    sel.outerHTML = `<input type="number" id="cc-banque" class="form-control" placeholder="ID de la banque (ex: 1)"/>`;
-    document.getElementById('alert-create-compte').style.display='none';
+    
+    // Réinitialisation de l'affichage du select
+    sel.innerHTML = '<option value="">Chargement des banques...</option>';
+    document.getElementById('alert-create-compte').style.display = 'none';
+    
+    // Ouverture du modal
     Modal.open('modal-create-compte');
+    
+    try {
+      // Récupération des banques actives depuis le Back-End
+      const banques = await API.afficherBanqueActive();
+      
+      if (!banques || banques.length === 0) {
+        sel.innerHTML = '<option value="">Aucune banque active disponible</option>';
+        return;
+      }
+      
+      // Remplissage du select
+      sel.innerHTML = '<option value="">-- Choisissez une banque --</option>';
+      banques.forEach(banque => {
+        const opt = document.createElement('option');
+        opt.value = banque.id;
+        opt.textContent = `${banque.nom} (ID: ${banque.id})`;
+        sel.appendChild(opt);
+      });
+      
+    } catch(err) {
+      sel.innerHTML = '<option value="">Erreur de chargement des banques</option>';
+      Toast.error("Impossible de récupérer la liste des banques.");
+    }
   }
 
   async function doCreateCompte() {
     const banqueId = parseInt(document.getElementById('cc-banque').value);
     const alert    = document.getElementById('alert-create-compte');
     const alertMsg = document.getElementById('alert-cc-msg');
-    alert.style.display='none';
-    if (!banqueId||banqueId<=0){ alert.style.display='flex'; alertMsg.textContent='Veuillez saisir un ID de banque valide.'; return; }
+    alert.style.display = 'none';
+    
+    // Vérification qu'une option valide a été sélectionnée
+    if (!banqueId || banqueId <= 0){ 
+      alert.style.display = 'flex'; 
+      alertMsg.textContent = 'Veuillez sélectionner une banque dans la liste.'; 
+      return; 
+    }
+    
     const btn = document.getElementById('btn-create-compte');
-    btn.disabled=true; btn.innerHTML='<span class="spinner spinner-sm"></span>';
+    btn.disabled = true; 
+    btn.innerHTML = '<span class="spinner spinner-sm"></span>';
+    
     try {
       monCompte = await API.createCompte({ banqueId });
       Toast.success('Compte bancaire ouvert avec succès !');
       Modal.close('modal-create-compte');
       updateBalanceUI();
-    } catch(err) { alert.style.display='flex'; alertMsg.textContent=getErrorMessage(err); }
-    btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Ouvrir le compte';
+    } catch(err) { 
+      alert.style.display = 'flex'; 
+      alertMsg.textContent = getErrorMessage(err); 
+    }
+    btn.disabled = false; 
+    btn.innerHTML = '<i class="fas fa-save"></i> Ouvrir le compte';
   }
+
+  
 
   function exportHistCSV() {
     const rows=[];

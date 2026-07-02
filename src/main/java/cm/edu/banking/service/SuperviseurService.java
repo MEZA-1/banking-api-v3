@@ -61,6 +61,8 @@ public class SuperviseurService {
     private final OperationRepository operationRepository;
     private final PasswordEncoder passwordEncoder;
     private final BankingMapper mapper;
+    private final BigDecimal MONTANT_MIN = new BigDecimal("10000");
+    private final BigDecimal MONTANT_MAX = new BigDecimal("5000000");
 
     // =========================================================================
     //  Création d'agent (Skill 5)
@@ -258,9 +260,17 @@ public class SuperviseurService {
     @Transactional
     public OperationResponse approvisionnerAgent(
             User superviseur, Long agentId, ApprovisionnerAgentRequest request) {
+    	
+    	BigDecimal montant = request.getMontant();
+    	
+        //verifier si le montant est positif et superier a MONTANT_MIN et inferrieur a MONTANT_MAX
+    	if(montant.compareTo(MONTANT_MIN) < 0 || montant.compareTo(MONTANT_MAX) > 0) {
+    		throw new BankingException("Le montant doit être compris entre "+MONTANT_MIN+" et"+ MONTANT_MAX+" FCFA.");
+    	}
 
         Banque banque = superviseur.getBanque();
         verifierBanqueActive(banque);
+        
 
         // Récupération et validation du compte de l'agent
         CompteBancaire compteAgent = getCompteDeUtilisateurDansBanque(banque.getId(), agentId);
@@ -269,7 +279,7 @@ public class SuperviseurService {
                     "Approvisionnement impossible : le compte de l'agent est suspendu.");
         }
 
-        BigDecimal montant = request.getMontant();
+        
 
         // Vérification du montantActif de la banque
         if (banque.getMontantActif().compareTo(montant) < 0) {

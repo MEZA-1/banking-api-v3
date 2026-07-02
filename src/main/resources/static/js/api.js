@@ -147,6 +147,7 @@ const API = {
   getmonprofil()                       { return this.get('/api/utilisateurs/me');},
   transfert(data)                      { return this.post('/api/client/transfert', data); },
   getHistoriqueClient(page = 0)        { return this.get(`/api/client/historique?page=${page}&size=20`); },
+  afficherBanqueActive()               { return this.get('/api/client/banques');},
 };
 
 // ── Toast ──────────────────────────────────────────────────────

@@ -1,11 +1,14 @@
 package cm.edu.banking.repository;
 
-import cm.edu.banking.model.Banque;
-import cm.edu.banking.model.enums.StatutBanque;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import cm.edu.banking.dto.response.BanqueActiveProjection;
+import cm.edu.banking.model.Banque;
+import cm.edu.banking.model.enums.StatutBanque;
 
 /**
  * Repository Spring Data JPA pour l'entité {@link Banque}.
@@ -32,4 +35,9 @@ public interface BanqueRepository extends JpaRepository<Banque, Long> {
      * @return la liste des banques correspondantes
      */
     List<Banque> findByStatut(StatutBanque statut);
+    
+    @Query("SELECT b.id as id, b.nom as nom FROM Banque b WHERE b.statut = cm.edu.banking.model.enums.StatutBanque.ACTIVE ")
+     List<BanqueActiveProjection> findAllActiveBanques();
+
+
 }

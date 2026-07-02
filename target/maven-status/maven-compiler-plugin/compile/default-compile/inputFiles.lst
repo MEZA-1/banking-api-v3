@@ -33,6 +33,7 @@
 /home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/request/CreateSuperviseurRequest.java
 /home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/exception/DuplicateResourceException.java
 /home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/service/TransactionService.java
+/home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/dto/response/BanqueActiveProjection.java
 /home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/model/User.java
 /home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/model/CompteBancaire.java
 /home/meza/Bureau/geril/mes projets/banking-api-v3/src/main/java/cm/edu/banking/exception/GlobalExceptionHandler.java

@@ -527,6 +527,7 @@
       // Les infos de compte sont désormais des champs plats dans UserResponse
       const hasCompte  = !!a.numeroCompte;
       const statut     = a.statutCompte || null;
+      console.log(a);
       return `<tr>
         <td><strong>${a.prenom} ${a.nom}</strong></td>
         <td class="text-sm">${a.email}</td>
@@ -697,7 +698,7 @@
     const alert   = document.getElementById('alert-appro');
     const alertMsg = document.getElementById('alert-appro-msg');
     alert.style.display = 'none';
-    if (!montant || montant <= 0) {
+    if (!montant || montant <= 0 || montant < 10000) {
       alert.style.display='flex'; alertMsg.textContent='Montant invalide.'; return;
     }
     const btn = document.getElementById('btn-appro');

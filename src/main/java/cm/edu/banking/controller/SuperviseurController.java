@@ -1,5 +1,23 @@
 package cm.edu.banking.controller;
 
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import cm.edu.banking.dto.request.ApprovisionnerAgentRequest;
 import cm.edu.banking.dto.request.CreateAgentRequest;
 import cm.edu.banking.dto.response.CompteBancaireResponse;
@@ -18,16 +36,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Contrôleur REST exposant les endpoints réservés au rôle
@@ -45,6 +54,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @RestController
+@Slf4j
 @RequestMapping("/api/superviseur")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('SUPERVISEUR')")
@@ -215,6 +225,11 @@ public class SuperviseurController {
             @Parameter(description = "Identifiant de l'agent") @PathVariable Long agentId,
             @Valid @RequestBody ApprovisionnerAgentRequest request) {
         User superviseur = securityUtils.getUtilisateurConnecte();
+        //superviseur.setBanque(securityUtils.getBanqueConnectee());
+        //afficher le supperviseur dans les logs pour verifier les donners
+        
+        log.info("superviseur controler"+superviseur);
+        
         return ResponseEntity.ok(
                 superviseurService.approvisionnerAgent(superviseur, agentId, request));
     }

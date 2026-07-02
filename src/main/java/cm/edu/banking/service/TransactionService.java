@@ -1,9 +1,20 @@
 package cm.edu.banking.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import cm.edu.banking.dto.request.CreateCompteBancaireRequest;
 import cm.edu.banking.dto.request.DepotRequest;
-import cm.edu.banking.dto.request.RetraitRequest;
 import cm.edu.banking.dto.request.TransfertRequest;
+import cm.edu.banking.dto.response.BanqueActiveProjection;
 import cm.edu.banking.dto.response.CompteBancaireResponse;
 import cm.edu.banking.dto.response.OperationResponse;
 import cm.edu.banking.exception.BankingException;
@@ -21,15 +32,6 @@ import cm.edu.banking.repository.CompteBancaireRepository;
 import cm.edu.banking.repository.OperationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Moteur central de transactions financières de la plateforme bancaire
@@ -245,6 +247,14 @@ public class TransactionService {
                 compteClient.getNumeroCompte(), compteAgent.getBanque().getNom());
 
         return mapper.toOperationResponse(saved);
+    }
+    
+    
+    //lister les banques actives au clien a savoir le nom et L'id des banques
+    
+    @Transactional(readOnly = true)
+    public  List<BanqueActiveProjection> getBanqueUser(){
+    	return banqueRepository.findAllActiveBanques();
     }
 /*
     // =========================================================================
@@ -664,4 +674,7 @@ public class TransactionService {
         long ms = System.currentTimeMillis() % 1000;
         return codeBanque + "-" + timestamp + "-" + String.format("%03d", ms);
     }
+
+
 }
+

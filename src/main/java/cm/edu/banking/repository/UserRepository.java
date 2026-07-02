@@ -1,12 +1,15 @@
 package cm.edu.banking.repository;
 
-import cm.edu.banking.model.User;
-import cm.edu.banking.model.enums.Role;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import cm.edu.banking.model.User;
+import cm.edu.banking.model.enums.Role;
 
 /**
  * Repository Spring Data JPA pour l'entité {@link User}.
@@ -36,6 +39,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
      *         si aucun utilisateur ne possède cet email
      */
     Optional<User> findByEmail(String email);
+    
+    
+ // Cette requête force le chargement de la banque (JOIN FETCH) même si elle est configurée en LAZY
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.banque WHERE u.email = :email")
+    Optional<User> findByEmailWithBanque(@Param("email") String email);
 
     /**
      * Vérifie l'existence d'un utilisateur portant un email donné.
